@@ -47,28 +47,28 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBJWGWlmr-Fh3ejgiO_hJyUAP256f_31yI',
-    appId: '1:801033548083:web:a893ad4914100371f40e46',
-    messagingSenderId: '801033548083',
-    projectId: 'cross-ways-off',
-    authDomain: 'cross-ways-off.firebaseapp.com',
-    storageBucket: 'cross-ways-off.appspot.com',
+    apiKey: 'AIzaSyBFi_QQtQMmHSSbUPzei8aPWU-N9IOH3hw',
+    appId: '1:644552172787:web:9a74fde2127c14a4c24386',
+    messagingSenderId: '644552172787',
+    projectId: 'cross-ways',
+    authDomain: 'cross-ways.firebaseapp.com',
+    storageBucket: 'cross-ways.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBUcLtTnjpoxbBvaoU0BcwPlTa1iwEjLvs',
-    appId: '1:801033548083:android:9610000a2d96611af40e46',
-    messagingSenderId: '801033548083',
-    projectId: 'cross-ways-off',
-    storageBucket: 'cross-ways-off.appspot.com',
+    apiKey: 'AIzaSyD0hrqQAAfDiBG-3_gPqtrzaRJXUEaa-rI',
+    appId: '1:644552172787:android:def500807674d4c5c24386',
+    messagingSenderId: '644552172787',
+    projectId: 'cross-ways',
+    storageBucket: 'cross-ways.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCxd9ZFaMEh9LBEITt8mCXk_FSx0JE-ojg',
-    appId: '1:801033548083:ios:0f0561d90991b607f40e46',
-    messagingSenderId: '801033548083',
-    projectId: 'cross-ways-off',
-    storageBucket: 'cross-ways-off.appspot.com',
+    apiKey: 'AIzaSyA1aVMMnf2bsibJwiuosn3BKOak4_YGfCY',
+    appId: '1:644552172787:ios:641bea7930f2502bc24386',
+    messagingSenderId: '644552172787',
+    projectId: 'cross-ways',
+    storageBucket: 'cross-ways.appspot.com',
     iosBundleId: 'com.example.crossWays',
   );
 }

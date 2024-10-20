@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "801033548083",
-    "project_id": "cross-ways-off",
-    "storage_bucket": "cross-ways-off.appspot.com"
+    "project_number": "644552172787",
+    "project_id": "cross-ways",
+    "storage_bucket": "cross-ways.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:801033548083:android:9610000a2d96611af40e46",
+        "mobilesdk_app_id": "1:644552172787:android:def500807674d4c5c24386",
         "android_client_info": {
           "package_name": "com.example.cross_ways"
         }
@@ -15,7 +15,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBUcLtTnjpoxbBvaoU0BcwPlTa1iwEjLvs"
+          "current_key": "AIzaSyD0hrqQAAfDiBG-3_gPqtrzaRJXUEaa-rI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644552172787:android:d20992f6b80e3f68c24386",
+        "android_client_info": {
+          "package_name": "com.example.cross_ways_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0hrqQAAfDiBG-3_gPqtrzaRJXUEaa-rI"
         }
       ],
       "services": {
