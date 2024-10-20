@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "801033548083",
+    "project_id": "cross-ways-off",
+    "storage_bucket": "cross-ways-off.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801033548083:android:9610000a2d96611af40e46",
+        "android_client_info": {
+          "package_name": "com.example.cross_ways"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUcLtTnjpoxbBvaoU0BcwPlTa1iwEjLvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
