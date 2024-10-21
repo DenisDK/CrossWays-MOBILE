@@ -1,4 +1,6 @@
+import 'package:cross_ways/login.dart';
 import 'package:flutter/material.dart';
+import 'login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,9 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'CrossWays',
-      home: MyHomePage(),
+      home: LoginScreen(),
     );
   }
 }
