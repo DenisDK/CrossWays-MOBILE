@@ -1,6 +1,5 @@
-import 'package:cross_ways/login.dart';
+import 'package:cross_ways/views/login_view.dart';
 import 'package:flutter/material.dart';
-import 'login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
