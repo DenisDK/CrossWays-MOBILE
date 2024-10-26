@@ -4,6 +4,7 @@ import 'package:cross_ways/views/login_view.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cross_ways/auth/sign_in_with_google.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -41,8 +42,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const Padding(padding: EdgeInsets.only(top: 30)),
                     ElevatedButton(
-                      onPressed: () {
-                        // Додайте функціональність кнопки тут
+                      onPressed: () async {
+                        User? user = await signInWithGoogle();
+                        if (user != null) {
+                          Navigator.pushReplacement(
+                              context,
+                              PushPageRoute(page: const MainMenuView()));
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
@@ -69,9 +75,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         User? user = await signInWithFacebook(context);
                         if (user != null) {
                           Navigator.pushReplacement(
-                                        context,
-                                        FadePageRoute(
-                                            page: const MainMenuView()));
+                              context,
+                              PushPageRoute(page: const MainMenuView()));
                         }
                       },
                       style: ElevatedButton.styleFrom(
