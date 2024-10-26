@@ -1,5 +1,8 @@
+import 'package:cross_ways/auth/sing_in_with_facebook.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/login_view.dart';
+import 'package:cross_ways/views/main_menu_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -62,8 +65,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
                     ElevatedButton(
-                      onPressed: () {
-                        // Додайте функціональність кнопки тут
+                      onPressed: () async {
+                        User? user = await signInWithFacebook(context);
+                        if (user != null) {
+                          Navigator.pushReplacement(
+                                        context,
+                                        FadePageRoute(
+                                            page: const MainMenuView()));
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
