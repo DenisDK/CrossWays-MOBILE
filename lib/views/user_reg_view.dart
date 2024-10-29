@@ -1,7 +1,11 @@
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'registration_view.dart';
+import 'package:cross_ways/database/create_database_with_user.dart';
+import 'package:cross_ways/database/does_user_exist_in_database.dart';
 
 class UserRegScreen extends StatefulWidget {
   @override
@@ -9,6 +13,13 @@ class UserRegScreen extends StatefulWidget {
 }
 
 class _UserRegScreenState extends State<UserRegScreen> {
+  DateTime? birthday;
+  String? selectedGender;
+  String? nickname;
+  String? name;
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +28,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
         children: [
           // Іконка назад
           Positioned(
-            top: 40, 
+            top: 40,
             left: 20,
             child: IconButton(
               icon: const Icon(
@@ -27,9 +38,8 @@ class _UserRegScreenState extends State<UserRegScreen> {
                 size: 32,
               ),
               onPressed: () {
-                   Navigator.pushReplacement(
-                              context,
-                              PushPageRoute(page:const  MainMenuView()));
+                Navigator.pushReplacement(
+                    context, FadePageRoute(page: RegistrationScreen()));
               },
             ),
           ),
@@ -38,7 +48,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Container(
                 width: 330,
-                height: 460,
+                height: 560,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 231, 229, 225),
                   borderRadius: BorderRadius.circular(20),
@@ -53,6 +63,36 @@ class _UserRegScreenState extends State<UserRegScreen> {
                           color: Color.fromARGB(255, 135, 100, 71),
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    // Поле NickName
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 4,
+                              offset: const Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          onChanged: (value) {
+                            nickname = value; // Зберігаємо введене значення
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'NickName',
+                            labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 135, 100, 71),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
                     ),
@@ -71,36 +111,12 @@ class _UserRegScreenState extends State<UserRegScreen> {
                             ),
                           ],
                         ),
-                        child: const TextField(
-                          decoration: InputDecoration(
+                        child: TextField(
+                          onChanged: (value) {
+                            name = value; // Зберігаємо введене значення
+                          },
+                          decoration: const InputDecoration(
                             labelText: 'Name',
-                            labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 135, 100, 71),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Поле Surname
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              blurRadius: 4,
-                              offset: const Offset(2, 2),
-                            ),
-                          ],
-                        ),
-                        child: const TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Surname',
                             labelStyle: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                             ),
@@ -141,7 +157,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
                           ),
                           onTap: () async {
                             // Вибір дати
-                            DateTime? pickedDate = await showDatePicker(
+                              birthday = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(1900),
@@ -162,6 +178,81 @@ class _UserRegScreenState extends State<UserRegScreen> {
                         ),
                       ),
                     ),
+                    // Вибір Гендеру
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      child: Container(
+                        width: 330, // Встановлюємо таку ж ширину, як у текстових полів
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white, // Фон вибору гендера
+                          borderRadius: BorderRadius.circular(20), // Скруглення кутів
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 4,
+                              offset: const Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                'Gender',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 135, 100, 71),
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                // Радіо кнопка для Male
+                                Radio<String>(
+                                  value: 'Male',
+                                  groupValue: selectedGender,
+                                  activeColor: const Color.fromARGB(255, 135, 100, 71), // Колір вибраного кола
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      selectedGender = value;
+                                    });
+                                  },
+                                ),
+                                // Текст Male
+                                Text(
+                                  'Male',
+                                  style: TextStyle(
+                                    color: selectedGender == 'Male' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, // Змінюємо колір тексту
+                                  ),
+                                ),
+                                const SizedBox(width: 20), // Відстань між радіо-кнопками
+                                // Радіо кнопка для Female
+                                Radio<String>(
+                                  value: 'Female',
+                                  groupValue: selectedGender,
+                                  activeColor: const Color.fromARGB(255, 135, 100, 71), // Колір вибраного кола
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      selectedGender = value;
+                                    });
+                                  },
+                                ),
+                                // Текст Female
+                                Text(
+                                  'Female',
+                                  style: TextStyle(
+                                    color: selectedGender == 'Female' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, // Змінюємо колір тексту
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     // Кнопка Continue
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
@@ -169,7 +260,9 @@ class _UserRegScreenState extends State<UserRegScreen> {
                         width: 250,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            validateAndSubmit(context);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(255, 92, 109, 103),
                             shape: RoundedRectangleBorder(
@@ -193,5 +286,52 @@ class _UserRegScreenState extends State<UserRegScreen> {
         ],
       ),
     );
+  }
+
+  bool isEighteenOrOlder(DateTime birthday) {
+    final today = DateTime.now();
+    final age = today.year - birthday.year;
+
+    // Перевірка, чи день народження вже був у поточному році
+    if (today.month < birthday.month ||
+        (today.month == birthday.month && today.day < birthday.day)) {
+      return age >= 18 - 1; // Якщо ще не було дня народження в цьому році
+    }
+
+    return age >= 18; // Якщо день народження вже був
+  }
+
+  void validateAndSubmit(BuildContext context) {
+    // Перевірка, чи всі поля заповнені
+    if (nickname == null || nickname!.isEmpty ||
+        name == null || name!.isEmpty ||
+        birthday == null ||
+        selectedGender == null) {
+      // Виведення повідомлення, якщо поля не заповнені
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+    // Виведення повідомлення, якщо менше 18
+    else {
+      if(!isEighteenOrOlder(birthday!)){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Your age is under 18'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      // Все ок
+      else{
+        addUser(nickname!, name!, selectedGender!, birthday!);
+        Navigator.pushReplacement(
+            context,
+            PushPageRoute(page: MainMenuView()));
+      }
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/auth/sing_in_with_facebook.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/login_view.dart';
@@ -5,6 +6,8 @@ import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cross_ways/auth/sign_in_with_google.dart';
+import 'package:cross_ways/views/user_reg_view.dart';
+import 'package:cross_ways/database/does_user_exist_in_database.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -45,9 +48,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       onPressed: () async {
                         User? user = await signInWithGoogle();
                         if (user != null) {
-                          Navigator.pushReplacement(
-                              context,
-                              PushPageRoute(page: const MainMenuView()));
+                          if(await checkUserExists(user.uid)){
+                            Navigator.pushReplacement(
+                                context,
+                                PushPageRoute(page: MainMenuView()));
+                          }
+                          else{
+                            Navigator.pushReplacement(
+                                context,
+                                PushPageRoute(page: UserRegScreen()));
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -74,9 +84,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       onPressed: () async {
                         User? user = await signInWithFacebook(context);
                         if (user != null) {
-                          Navigator.pushReplacement(
-                              context,
-                              PushPageRoute(page: const MainMenuView()));
+                          if(await checkUserExists(user.uid)){
+                            Navigator.pushReplacement(
+                                context,
+                                PushPageRoute(page: MainMenuView()));
+                          }
+                          else{
+                            Navigator.pushReplacement(
+                                context,
+                                PushPageRoute(page: UserRegScreen()));
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
