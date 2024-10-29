@@ -1,11 +1,10 @@
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'registration_view.dart';
 import 'package:cross_ways/database/create_database_with_user.dart';
-import 'package:cross_ways/database/does_user_exist_in_database.dart';
+
 
 class UserRegScreen extends StatefulWidget {
   @override
@@ -18,7 +17,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
   String? nickname;
   String? name;
 
-
+TextEditingController _dateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +141,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
                           ],
                         ),
                         child: TextField(
+                          controller: _dateController,
                           readOnly: true,
                           decoration: const InputDecoration(
                             labelText: 'Pick a date',
@@ -174,7 +174,10 @@ class _UserRegScreenState extends State<UserRegScreen> {
                                 );
                               },
                             );
-                          },
+                             if (birthday != null) {
+                              _dateController.text = "${birthday!.toLocal()}".split(' ')[0];
+                          };
+                          }
                         ),
                       ),
                     ),
@@ -182,11 +185,11 @@ class _UserRegScreenState extends State<UserRegScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       child: Container(
-                        width: 330, // Встановлюємо таку ж ширину, як у текстових полів
+                        width: 330, 
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.white, // Фон вибору гендера
-                          borderRadius: BorderRadius.circular(20), // Скруглення кутів
+                          color: Colors.white, 
+                          borderRadius: BorderRadius.circular(20), 
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.3),
@@ -210,41 +213,37 @@ class _UserRegScreenState extends State<UserRegScreen> {
                             ),
                             Row(
                               children: [
-                                // Радіо кнопка для Male
                                 Radio<String>(
                                   value: 'Male',
                                   groupValue: selectedGender,
-                                  activeColor: const Color.fromARGB(255, 135, 100, 71), // Колір вибраного кола
+                                  activeColor: const Color.fromARGB(255, 135, 100, 71), 
                                   onChanged: (String? value) {
                                     setState(() {
                                       selectedGender = value;
                                     });
                                   },
                                 ),
-                                // Текст Male
                                 Text(
                                   'Male',
                                   style: TextStyle(
-                                    color: selectedGender == 'Male' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, // Змінюємо колір тексту
+                                    color: selectedGender == 'Male' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, 
                                   ),
                                 ),
-                                const SizedBox(width: 20), // Відстань між радіо-кнопками
-                                // Радіо кнопка для Female
+                                const SizedBox(width: 20), 
                                 Radio<String>(
                                   value: 'Female',
                                   groupValue: selectedGender,
-                                  activeColor: const Color.fromARGB(255, 135, 100, 71), // Колір вибраного кола
+                                  activeColor: const Color.fromARGB(255, 135, 100, 71),
                                   onChanged: (String? value) {
                                     setState(() {
                                       selectedGender = value;
                                     });
                                   },
                                 ),
-                                // Текст Female
                                 Text(
                                   'Female',
                                   style: TextStyle(
-                                    color: selectedGender == 'Female' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, // Змінюємо колір тексту
+                                    color: selectedGender == 'Female' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, 
                                   ),
                                 ),
                               ],
@@ -302,12 +301,10 @@ class _UserRegScreenState extends State<UserRegScreen> {
   }
 
   void validateAndSubmit(BuildContext context) {
-    // Перевірка, чи всі поля заповнені
     if (nickname == null || nickname!.isEmpty ||
         name == null || name!.isEmpty ||
         birthday == null ||
         selectedGender == null) {
-      // Виведення повідомлення, якщо поля не заповнені
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill in all fields'),
@@ -315,7 +312,6 @@ class _UserRegScreenState extends State<UserRegScreen> {
         ),
       );
     }
-    // Виведення повідомлення, якщо менше 18
     else {
       if(!isEighteenOrOlder(birthday!)){
         ScaffoldMessenger.of(context).showSnackBar(

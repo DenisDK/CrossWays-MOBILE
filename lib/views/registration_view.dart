@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/auth/sing_in_with_facebook.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/login_view.dart';

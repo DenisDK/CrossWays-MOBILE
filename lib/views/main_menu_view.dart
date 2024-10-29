@@ -97,7 +97,11 @@ class _MainMenuViewState extends State<MainMenuView> {
                             width: 250,
                             height: 40,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                               Navigator.pushReplacement(
+                              context,
+                              PushPageRoute(page: UserRegScreen()));
+                              },
                               style: ElevatedButton.styleFrom(
                                 elevation: 9,
                                 shadowColor: const Color.fromARGB(255, 92, 109, 103),
