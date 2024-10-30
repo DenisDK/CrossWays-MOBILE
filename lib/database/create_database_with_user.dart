@@ -49,6 +49,7 @@ Future<void> addUser(String nickname, String name, String gender, DateTime birth
       'activeTravels': [],
       'isPrivate': false,
       'profileImage': downloadUrl,
+      'isPremium': false,
     });
 
     // Створюємо підколекції
