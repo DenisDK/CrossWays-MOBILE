@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
-import 'package:cross_ways/views/registration_view.dart';
+import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/user_reg_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -54,16 +54,13 @@ class HomePage extends StatelessWidget {
                       userDataSnapshot.data!['nickname'] != null) {
                     return const MainMenuView();
                   } else {
-                    FirebaseAuth.instance.signOut(); 
-                    return  UserRegScreen();
+                    return  RegistrationScreen();
                   }
                 }
                 return _loadingScreen();
               },
             );
-          } else {
-            return  RegistrationScreen();
-          }
+          } 
         }
         return _loadingScreen();
       },

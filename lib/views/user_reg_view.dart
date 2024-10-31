@@ -2,7 +2,7 @@ import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'registration_view.dart';
+import 'log_in_view.dart';
 import 'package:cross_ways/database/create_database_with_user.dart';
 
 

@@ -1,6 +1,5 @@
 import 'package:cross_ways/auth/sing_in_with_facebook.dart';
 import 'package:cross_ways/components/animation_route.dart';
-import 'package:cross_ways/views/login_view.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,15 +26,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Container(
                 width: 300,
-                height: 500,
+                height: 480,
                 decoration: const BoxDecoration(
                     color: Color.fromARGB(255, 231, 229, 225)),
                 child: Column(
                   children: [
                     const Padding(
-                      padding: EdgeInsets.only(top: 120, right: 60),
+                      padding: EdgeInsets.only(top: 120, right: 85),
                       child: Text(
-                        'Sign Up',
+                        'Log in',
                         style: TextStyle(
                             color: Color.fromARGB(255, 135, 100, 71),
                             fontSize: 40,
@@ -78,7 +77,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 5)),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 70,
+                          height: 1,
+                          color: const Color.fromARGB(255, 135, 100, 71),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            'or',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 135, 100, 71),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 70,
+                          height: 1,
+                          color: const Color.fromARGB(255, 135, 100, 71),
+                        ),
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
                     ElevatedButton(
                       onPressed: () async {
                         User? user = await signInWithFacebook(context);
@@ -114,48 +139,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 5)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 70,
-                          height: 1,
-                          color: const Color.fromARGB(255, 135, 100, 71),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            'or',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 135, 100, 71),
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 70,
-                          height: 1,
-                          color: const Color.fromARGB(255, 135, 100, 71),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context, FadePageRoute(page: LoginScreen()));
-                      },
-                      child: const Text(
-                        'Log In',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 135, 100, 71),
-                          decoration: TextDecoration.underline,
-                          decorationColor: Color.fromARGB(255, 135, 100, 71),
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
