@@ -1,9 +1,11 @@
+import 'dart:math'; // Import the math package for Random
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class MainMenuView extends StatefulWidget {
   const MainMenuView({super.key});
@@ -13,12 +15,43 @@ class MainMenuView extends StatefulWidget {
 }
 
 class _MainMenuViewState extends State<MainMenuView> {
+  late List<String> imageList;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    imageList = [
+      'assets/main_menu_photos/1.jpg',
+      'assets/main_menu_photos/2.jpg',
+      'assets/main_menu_photos/3.jpg',
+      'assets/main_menu_photos/4.jpg',
+      'assets/main_menu_photos/5.jpg',
+      'assets/main_menu_photos/6.jpg',
+      'assets/main_menu_photos/7.jpg',
+      'assets/main_menu_photos/8.jpg',
+      'assets/main_menu_photos/9.jpg',
+      'assets/main_menu_photos/10.jpg',
+      'assets/main_menu_photos/11.jpg',
+      'assets/main_menu_photos/12.jpg',
+      'assets/main_menu_photos/13.jpg',
+      'assets/main_menu_photos/14.jpg',
+      'assets/main_menu_photos/15.jpg',
+      'assets/main_menu_photos/16.jpg',
+      'assets/main_menu_photos/17.jpg',
+      'assets/main_menu_photos/18.jpg',
+      'assets/main_menu_photos/19.jpg',
+      'assets/main_menu_photos/20.jpg',
+    ];
+    imageList.shuffle(Random()); 
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: ClipRect( 
+      endDrawer: ClipRect(
         child: SizedBox(
-          width: 200, 
+          width: 200,
           child: Drawer(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -44,10 +77,12 @@ class _MainMenuViewState extends State<MainMenuView> {
                   title: const Text('Something', style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {},
                 ),
-                const SizedBox( height: 25,),
+                const SizedBox(height: 25),
                 ListTile(
                   title: const Text('Sign Out', style: TextStyle(color: Colors.red, fontSize: 18)),
-                  onTap: () {_handleSignOut(context);},
+                  onTap: () {
+                    _handleSignOut(context);
+                  },
                 ),
               ],
             ),
@@ -105,22 +140,49 @@ class _MainMenuViewState extends State<MainMenuView> {
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             Center(
-              child: Container(
-                width: 380,
-                height: 775,
-                decoration: BoxDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage('assets/beachPhoto.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Stack(
                   children: [
-                    Center(
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 800),
+                      child: Container(
+                        key: ValueKey<int>(_currentIndex),
+                        width: 380,
+                        height: 775,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(imageList[_currentIndex]),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    CarouselSlider.builder(
+                      itemCount: imageList.length,
+                      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+                        return Container(); 
+                      },
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        autoPlayInterval: const Duration(seconds: 45),
+                        autoPlayAnimationDuration: const Duration(milliseconds: 1500),
+                        viewportFraction: 1.0,
+                        aspectRatio: 0.536,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        },
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 200,
                       child: Column(
                         children: [
-                          const Padding(padding: EdgeInsets.only(top: 240)),
                           const Text(
                             'Welcome back!',
                             style: TextStyle(
@@ -170,11 +232,11 @@ class _MainMenuViewState extends State<MainMenuView> {
                                 'Join the trip',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 92, 109, 103),
-                                  fontSize: 16,
+                                  fontSize: 15.9,
                                 ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -187,9 +249,8 @@ class _MainMenuViewState extends State<MainMenuView> {
       ),
     );
   }
-}
 
- void _handleSignOut(BuildContext context) async {
+  void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,
       'Вихід з аккаунту',
@@ -199,8 +260,10 @@ class _MainMenuViewState extends State<MainMenuView> {
       bool isUserSignOut = await signOut();
       if (isUserSignOut) {
         Navigator.pushReplacement(
-            context, FadePageRoute(page:  LogInScreen()));
+          context,
+          FadePageRoute(page: LogInScreen()),
+        );
       }
     }
   }
-
+}

@@ -21,6 +21,7 @@ dependencies:
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^7.1.1
   material_symbols_icons: ^4.2789.0
+  carousel_slider: ^5.0.0
 
   cupertino_icons: ^1.0.8
 
@@ -35,5 +36,5 @@ flutter:
 
   uses-material-design: true
   assets:
-    - assets/beachPhoto.jpg
+    - assets/main_menu_photos/
     - assets/standardImage.png
