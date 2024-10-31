@@ -7,12 +7,12 @@ import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/views/user_reg_view.dart';
 import 'package:cross_ways/database/does_user_exist_in_database.dart';
 
-class RegistrationScreen extends StatefulWidget {
+class LogInScreen extends StatefulWidget {
   @override
-  _RegistrationScreenState createState() => _RegistrationScreenState();
+  _LogInScreenState createState() => _LogInScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _LogInScreenState extends State<LogInScreen> {
   bool isEnglish = true;
 
   @override

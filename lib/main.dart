@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
-import 'package:cross_ways/views/user_reg_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,19 +47,23 @@ class HomePage extends StatelessWidget {
                   .doc(user.uid)
                   .get(),
               builder: (context, userDataSnapshot) {
-                if (userDataSnapshot.connectionState == ConnectionState.done) {
+               if (userDataSnapshot.connectionState == ConnectionState.done) {
                   if (userDataSnapshot.data != null &&
                       userDataSnapshot.data!.exists &&
                       userDataSnapshot.data!['nickname'] != null) {
                     return const MainMenuView();
                   } else {
-                    return  RegistrationScreen();
+                    return  LogInScreen();
                   }
                 }
                 return _loadingScreen();
               },
             );
+            
           } 
+          else {
+            return  LogInScreen();
+            }
         }
         return _loadingScreen();
       },

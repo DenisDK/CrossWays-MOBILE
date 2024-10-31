@@ -38,7 +38,7 @@ TextEditingController _dateController = TextEditingController();
               ),
               onPressed: () {
                 Navigator.pushReplacement(
-                    context, FadePageRoute(page: RegistrationScreen()));
+                    context, FadePageRoute(page: LogInScreen()));
               },
             ),
           ),

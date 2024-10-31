@@ -26,3 +26,17 @@ Future<User?> signInWithGoogle() async {
   }
 }
 
+Future<bool> signOut() async {
+  try {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+
+    await auth.signOut();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

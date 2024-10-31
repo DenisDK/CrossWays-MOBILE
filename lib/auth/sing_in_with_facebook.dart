@@ -15,7 +15,7 @@ Future<User?> signInWithFacebook(BuildContext context) async {
       final accessToken = result.accessToken;
 
       if (accessToken == null) {
-        CustomAlertDialog.show(
+        CustomAlert.show(
           context: context,
           title: 'Помилка',
           content: 'Не вдалося отримати токен доступу Facebook.',
@@ -36,7 +36,7 @@ Future<User?> signInWithFacebook(BuildContext context) async {
       return userCredential.user;
 
     } else if (result.status == LoginStatus.cancelled) {
-      CustomAlertDialog.show(
+      CustomAlert.show(
         context: context,
         title: 'Вхід скасовано',
         content: 'Вхід через Facebook був скасований.',
@@ -51,7 +51,7 @@ Future<User?> signInWithFacebook(BuildContext context) async {
       return null;
 
     } else {
-      CustomAlertDialog.show(
+      CustomAlert.show(
         context: context,
         title: 'Помилка',
         content: 'Помилка при вході через Facebook: ${result.message}',
@@ -83,7 +83,7 @@ Future<User?> signInWithFacebook(BuildContext context) async {
       default:
         errorMessage = 'Виникла помилка при вході через Facebook: ${e.message}';
     }
-    CustomAlertDialog.show(
+    CustomAlert.show(
       context: context,
       title: 'Помилка',
       content: errorMessage,
@@ -97,7 +97,7 @@ Future<User?> signInWithFacebook(BuildContext context) async {
     );
     return null;
   } catch (e) {
-    CustomAlertDialog.show(
+    CustomAlert.show(
       context: context,
       title: 'Помилка',
       content: 'Виникла помилка при вході через Facebook: $e',

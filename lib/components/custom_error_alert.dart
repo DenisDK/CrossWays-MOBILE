@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class CustomAlertDialog {
+class CustomAlert {
   static void show({
     required BuildContext context,
     required String title,
     required String content,
-    Color titleColor = Colors.blueAccent,
-    Color contentColor = Colors.grey,
-    double titleFontSize = 18.0,
-    double contentFontSize = 16.0,
-    Color buttonColor = const Color.fromARGB(255, 49, 133, 52),
+    Color titleColor = const Color.fromARGB(255, 135, 100, 71),
+    Color contentColor = const Color.fromARGB(255, 135, 100, 71),
+    double titleFontSize = 22.0,
+    double contentFontSize = 18.0,
+    Color buttonColor = const Color.fromARGB(255, 135, 100, 71),
     String buttonText = 'OK',
-    Color dialogBackgroundColor = Colors.white,
+    Color dialogBackgroundColor = const Color.fromARGB(255, 231, 229, 225),
   }) {
     showDialog(
       context: context,
