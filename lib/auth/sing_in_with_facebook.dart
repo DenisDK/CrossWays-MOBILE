@@ -19,11 +19,11 @@ Future<User?> signInWithFacebook(BuildContext context) async {
           context: context,
           title: 'Помилка',
           content: 'Не вдалося отримати токен доступу Facebook.',
-          titleColor: Color.fromARGB(255, 135, 100, 71),
-          contentColor: Color.fromARGB(255, 135, 100, 71),
+          titleColor: const Color.fromARGB(255, 135, 100, 71),
+          contentColor: const Color.fromARGB(255, 135, 100, 71),
           titleFontSize: 22.0,
           contentFontSize: 18.0,
-          buttonColor: Color.fromARGB(255, 135, 100, 71),
+          buttonColor: const Color.fromARGB(255, 135, 100, 71),
           buttonText: 'OK',
           dialogBackgroundColor: const Color.fromARGB(255, 231, 229, 225),
         );
@@ -40,11 +40,11 @@ Future<User?> signInWithFacebook(BuildContext context) async {
         context: context,
         title: 'Вхід скасовано',
         content: 'Вхід через Facebook був скасований.',
-        titleColor: Color.fromARGB(255, 135, 100, 71),
-        contentColor: Color.fromARGB(255, 135, 100, 71),
+        titleColor: const Color.fromARGB(255, 135, 100, 71),
+        contentColor: const Color.fromARGB(255, 135, 100, 71),
         titleFontSize: 22.0,
         contentFontSize: 18.0,
-        buttonColor: Color.fromARGB(255, 135, 100, 71),
+        buttonColor: const Color.fromARGB(255, 135, 100, 71),
         buttonText: 'OK',
         dialogBackgroundColor: const Color.fromARGB(255, 231, 229, 225),
       );
@@ -55,11 +55,11 @@ Future<User?> signInWithFacebook(BuildContext context) async {
         context: context,
         title: 'Помилка',
         content: 'Помилка при вході через Facebook: ${result.message}',
-        titleColor: Color.fromARGB(255, 135, 100, 71),
-        contentColor: Color.fromARGB(255, 135, 100, 71),
+        titleColor: const Color.fromARGB(255, 135, 100, 71),
+        contentColor: const Color.fromARGB(255, 135, 100, 71),
         titleFontSize: 22.0,
         contentFontSize: 18.0,
-        buttonColor: Color.fromARGB(255, 135, 100, 71),
+        buttonColor: const Color.fromARGB(255, 135, 100, 71),
         buttonText: 'OK',
         dialogBackgroundColor: const Color.fromARGB(255, 231, 229, 225),
       );
@@ -71,7 +71,7 @@ Future<User?> signInWithFacebook(BuildContext context) async {
     switch (e.code) {
       case 'account-exists-with-different-credential':
         errorMessage =
-            'Обліковий запис вже існує з такою ж адресою електронної пошти, але з іншими обліковими даними для входу. Увійдіть, використовуючи спосіб, пов’язаного з цією адресою електронної пошти.';
+            'Обліковий запис вже існує з такою ж адресою електронної пошти, але з іншими обліковими даними для входу. Увійдіть, використовуючи спосіб, пов’язаний з цією адресою електронної пошти.';
         break;
       case 'invalid-credential':
         errorMessage =
@@ -87,13 +87,13 @@ Future<User?> signInWithFacebook(BuildContext context) async {
       context: context,
       title: 'Помилка',
       content: errorMessage,
-      titleColor: const Color(0xFFE6E6E6),
-      contentColor: const Color(0xFFE6E6E6),
+      titleColor: const Color.fromARGB(255, 135, 100, 71),
+      contentColor: const Color.fromARGB(255, 135, 100, 71),
       titleFontSize: 22.0,
       contentFontSize: 18.0,
-      buttonColor: const Color(0xFFE6E6E6),
+      buttonColor: const Color.fromARGB(255, 135, 100, 71),
       buttonText: 'OK',
-      dialogBackgroundColor: const Color.fromARGB(255, 231, 229, 225),
+      dialogBackgroundColor: const Color.fromARGB(255, 231, 229, 225)
     );
     return null;
   } catch (e) {
@@ -101,11 +101,11 @@ Future<User?> signInWithFacebook(BuildContext context) async {
       context: context,
       title: 'Помилка',
       content: 'Виникла помилка при вході через Facebook: $e',
-      titleColor: const Color(0xFFE6E6E6),
-      contentColor: const Color(0xFFE6E6E6),
+      titleColor: const Color.fromARGB(255, 135, 100, 71),
+      contentColor: const Color.fromARGB(255, 135, 100, 71),
       titleFontSize: 22.0,
       contentFontSize: 18.0,
-      buttonColor: const Color(0xFFE6E6E6),
+      buttonColor: const Color.fromARGB(255, 135, 100, 71),
       buttonText: 'OK',
       dialogBackgroundColor: const Color.fromARGB(255, 231, 229, 225),
     );
