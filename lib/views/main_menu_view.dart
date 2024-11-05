@@ -3,6 +3,7 @@ import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/log_in_view.dart';
+import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -63,7 +64,11 @@ class _MainMenuViewState extends State<MainMenuView> {
                 ),
                 ListTile(
                   title: const Text('My profile', style: TextStyle(color: Colors.brown, fontSize: 18)),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        PushPageRoute(page: UserProfileScreen()));
+                  },
                 ),
                 ListTile(
                   title: const Text('My trips', style: TextStyle(color: Colors.brown, fontSize: 18)),
