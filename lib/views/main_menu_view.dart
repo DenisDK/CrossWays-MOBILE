@@ -4,6 +4,7 @@ import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
+import 'package:cross_ways/views/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -44,7 +45,7 @@ class _MainMenuViewState extends State<MainMenuView> {
       'assets/main_menu_photos/19.jpg',
       'assets/main_menu_photos/20.jpg',
     ];
-    imageList.shuffle(Random()); 
+    imageList.shuffle(Random());
   }
 
   @override
@@ -63,28 +64,35 @@ class _MainMenuViewState extends State<MainMenuView> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 ListTile(
-                  title: const Text('My profile', style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: const Text('My profile',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        PushPageRoute(page: UserProfileScreen()));
+                    Navigator.push(
+                        context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('My trips', style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: const Text('My trips',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: const Text('Something', style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: const Text('Something',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {},
                 ),
                 ListTile(
-                  title: const Text('Something', style: TextStyle(color: Colors.brown, fontSize: 18)),
-                  onTap: () {},
+                  title: const Text('Settings',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                        context, PushPageRoute(page: UserSettingsScreen()));
+                  },
                 ),
                 const SizedBox(height: 25),
                 ListTile(
-                  title: const Text('Sign Out', style: TextStyle(color: Colors.red, fontSize: 18)),
+                  title: const Text('Sign Out',
+                      style: TextStyle(color: Colors.red, fontSize: 18)),
                   onTap: () {
                     _handleSignOut(context);
                   },
@@ -122,11 +130,17 @@ class _MainMenuViewState extends State<MainMenuView> {
                   ),
                   Row(
                     children: [
-                      const Icon(
-                        Symbols.account_circle_filled_rounded,
-                        fill: 1,
-                        color: Color.fromARGB(255, 135, 100, 71),
-                        size: 40,
+                      IconButton(
+                        icon: const Icon(
+                          Symbols.account_circle_filled_rounded,
+                          fill: 1,
+                          color: Color.fromARGB(255, 135, 100, 71),
+                          size: 40,
+                        ),
+                        onPressed: () {
+                          Navigator.push(context,
+                              PushPageRoute(page: UserProfileScreen()));
+                        },
                       ),
                       Builder(
                         builder: (context) => IconButton(
@@ -166,13 +180,15 @@ class _MainMenuViewState extends State<MainMenuView> {
                     ),
                     CarouselSlider.builder(
                       itemCount: imageList.length,
-                      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
-                        return Container(); 
+                      itemBuilder: (BuildContext context, int itemIndex,
+                          int pageViewIndex) {
+                        return Container();
                       },
                       options: CarouselOptions(
                         autoPlay: true,
                         autoPlayInterval: const Duration(seconds: 45),
-                        autoPlayAnimationDuration: const Duration(milliseconds: 1500),
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 1500),
                         viewportFraction: 1.0,
                         aspectRatio: 0.536,
                         onPageChanged: (index, reason) {
@@ -212,7 +228,8 @@ class _MainMenuViewState extends State<MainMenuView> {
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                 elevation: 9,
-                                shadowColor: const Color.fromARGB(255, 92, 109, 103),
+                                shadowColor:
+                                    const Color.fromARGB(255, 92, 109, 103),
                               ),
                               child: const Text(
                                 'Create a new trip',
@@ -231,7 +248,8 @@ class _MainMenuViewState extends State<MainMenuView> {
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
                                 elevation: 9,
-                                shadowColor: const Color.fromARGB(255, 92, 109, 103),
+                                shadowColor:
+                                    const Color.fromARGB(255, 92, 109, 103),
                               ),
                               child: const Text(
                                 'Join the trip',
