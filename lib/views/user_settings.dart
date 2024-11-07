@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/database/update_user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
@@ -19,7 +17,7 @@ class UserSettingsScreen extends StatelessWidget {
     TextEditingController usernameController = TextEditingController();
     TextEditingController aboutController = TextEditingController();
 
-    Future<String?> _getUserAvatarUrl() async {
+    Future<String?> getUserAvatarUrl() async {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         final doc = await FirebaseFirestore.instance
@@ -169,8 +167,7 @@ class UserSettingsScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 FutureBuilder<String?>(
-                                  future:
-                                      _getUserAvatarUrl(), // Fetch avatar URL from Firestore
+                                  future: getUserAvatarUrl(),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
@@ -181,21 +178,25 @@ class UserSettingsScreen extends StatelessWidget {
                                         snapshot.data != null) {
                                       return CircleAvatar(
                                         radius: 77,
-                                        backgroundImage: NetworkImage(snapshot
-                                            .data!), // Load image from URL
+                                        backgroundImage:
+                                            NetworkImage(snapshot.data!),
                                       );
                                     } else {
                                       return const CircleAvatar(
                                         radius: 77,
                                         backgroundImage: AssetImage(
-                                            'assets/standardImage.jpg'), // Fallback to default image
+                                            'assets/standardImage.jpg'),
                                       );
                                     }
                                   },
                                 ),
                                 TextButton(
-                                  onPressed: () {
-                                    uploadAvatar(context);
+                                  onPressed: () async {
+                                    await uploadAvatar(context);
+                                    Navigator.push(
+                                      context,
+                                      FadePageRoute(page: UserSettingsScreen()),
+                                    );
                                   },
                                   child: const Text(
                                     'Upload new',
@@ -280,7 +281,7 @@ class UserSettingsScreen extends StatelessWidget {
                                 width: double.infinity,
                                 height: 45,
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     String? name =
                                         nameController.text.isNotEmpty
                                             ? nameController.text
@@ -291,8 +292,13 @@ class UserSettingsScreen extends StatelessWidget {
                                             : null;
 
                                     if (name != null || username != null) {
-                                      updateProfileNameUsername(
+                                      await updateProfileNameUsername(
                                           context, name, username);
+                                      Navigator.push(
+                                        context,
+                                        FadePageRoute(
+                                            page: UserSettingsScreen()),
+                                      );
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
@@ -345,13 +351,15 @@ class UserSettingsScreen extends StatelessWidget {
                               child: TextField(
                                 controller: aboutController,
                                 maxLines: 3,
+                                style: const TextStyle(
+                                  fontSize:
+                                      16, // Встановіть бажаний розмір шрифту
+                                ),
                                 decoration: InputDecoration(
                                   labelText: 'About yourself',
                                   labelStyle: const TextStyle(
                                     color: Color.fromARGB(255, 135, 100, 71),
                                   ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
@@ -367,24 +375,18 @@ class UserSettingsScreen extends StatelessWidget {
                                 width: double.infinity,
                                 height: 45,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    String? name =
-                                        nameController.text.isNotEmpty
-                                            ? nameController.text
-                                            : null;
-                                    String? username =
-                                        usernameController.text.isNotEmpty
-                                            ? usernameController.text
-                                            : null;
+                                  onPressed: () async {
                                     String? about =
                                         aboutController.text.isNotEmpty
                                             ? aboutController.text
                                             : null;
-
-                                    if (name != null ||
-                                        username != null ||
-                                        about != null) {
-                                      updateProfileAbout(context, about);
+                                    if (about != null) {
+                                      await updateProfileAbout(context, about);
+                                      Navigator.push(
+                                        context,
+                                        FadePageRoute(
+                                            page: UserSettingsScreen()),
+                                      );
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
@@ -436,15 +438,5 @@ void _handleSignOut(BuildContext context) async {
         FadePageRoute(page: LogInScreen()),
       );
     }
-  }
-
-  Future<File?> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      return File(pickedFile.path);
-    }
-    return null;
   }
 }
