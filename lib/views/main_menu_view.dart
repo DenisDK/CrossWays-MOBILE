@@ -8,6 +8,7 @@ import 'package:cross_ways/views/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cross_ways/views/vip_purchase_view.dart';
 
 class MainMenuView extends StatefulWidget {
   const MainMenuView({super.key});
@@ -72,14 +73,23 @@ class _MainMenuViewState extends State<MainMenuView> {
                   },
                 ),
                 ListTile(
-                  title: const Text('My trips',
+                  title: const Text('Main menu',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PushPageRoute(page: const MainMenuView()),
+                    );
+                  },
                 ),
                 ListTile(
-                  title: const Text('Something',
+                  title: const Text('VIP',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context, PushPageRoute(page: (VipPurchaseScreen()))
+                    );
+                  },
                 ),
                 ListTile(
                   title: const Text('Settings',

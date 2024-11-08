@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/database/update_user_data.dart';
+import 'package:cross_ways/views/vip_purchase_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
@@ -47,9 +48,7 @@ class UserSettingsScreen extends StatelessWidget {
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
-                      context,
-                      PushPageRoute(page: UserProfileScreen()),
-                    );
+                        context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
@@ -63,18 +62,20 @@ class UserSettingsScreen extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  title: const Text('My reviews',
+                  title: const Text('VIP',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context, PushPageRoute(page: (VipPurchaseScreen()))
+                    );
+                  },
                 ),
                 ListTile(
                   title: const Text('Settings',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
-                      context,
-                      PushPageRoute(page: UserSettingsScreen()),
-                    );
+                        context, PushPageRoute(page: UserSettingsScreen()));
                   },
                 ),
                 const SizedBox(height: 25),
@@ -94,7 +95,7 @@ class UserSettingsScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Builder(
                 builder: (context) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,7 +106,7 @@ class UserSettingsScreen extends StatelessWidget {
                           'CrossWays',
                           style: TextStyle(
                             color: Color.fromARGB(255, 135, 100, 71),
-                            fontSize: 30,
+                            fontSize: 35,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

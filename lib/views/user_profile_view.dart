@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
+import 'package:cross_ways/views/vip_purchase_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../auth/sign_in_with_google.dart';
@@ -63,14 +64,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   title: const Text('Main menu',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.pushReplacement(
-                        context, PushPageRoute(page: const MainMenuView()));
+                    Navigator.push(
+                      context,
+                      PushPageRoute(page: const MainMenuView()),
+                    );
                   },
                 ),
                 ListTile(
-                  title: const Text('My reviews',
+                  title: const Text('VIP',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context, PushPageRoute(page: (VipPurchaseScreen()))
+                    );
+                  },
                 ),
                 ListTile(
                   title: const Text('Settings',
@@ -111,7 +118,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -121,7 +128,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             'CrossWays',
                             style: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
-                              fontSize: 30,
+                              fontSize: 35,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
