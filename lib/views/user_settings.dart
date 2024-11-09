@@ -11,6 +11,8 @@ import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import 'about_as_view.dart';
+
 class UserSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -76,6 +78,16 @@ class UserSettingsScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
+                  },
+                ),
+                ListTile(
+                  title: const Text('About us',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PushPageRoute(page: const AboutUsScreen()),
+                    );
                   },
                 ),
                 const SizedBox(height: 25),

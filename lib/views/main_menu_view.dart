@@ -10,6 +10,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
 
+import 'about_as_view.dart';
+
 class MainMenuView extends StatefulWidget {
   const MainMenuView({super.key});
 
@@ -97,6 +99,16 @@ class _MainMenuViewState extends State<MainMenuView> {
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
+                  },
+                ),
+                ListTile(
+                  title: const Text('About us',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PushPageRoute(page: const AboutUsScreen()),
+                    );
                   },
                 ),
                 const SizedBox(height: 25),

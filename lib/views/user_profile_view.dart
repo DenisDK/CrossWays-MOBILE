@@ -7,6 +7,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../auth/sign_in_with_google.dart';
 import '../components/alert_dialog_custom.dart';
 import '../components/animation_route.dart';
+import 'about_as_view.dart';
 import 'log_in_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -85,6 +86,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
+                  },
+                ),
+                ListTile(
+                  title: const Text('About us',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PushPageRoute(page: const AboutUsScreen()),
+                    );
                   },
                 ),
                 const SizedBox(height: 25),

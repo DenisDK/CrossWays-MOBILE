@@ -11,6 +11,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:pay/pay.dart';
 import 'package:cross_ways/payment_config.dart';
 import 'package:cross_ways/database/update_premium.dart';
+import 'about_as_view.dart';
 import 'main_menu_view.dart';
 
 class VipPurchaseScreen extends StatefulWidget {
@@ -68,6 +69,16 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
+                  },
+                ),
+                ListTile(
+                  title: const Text('About us',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PushPageRoute(page: const AboutUsScreen()),
+                    );
                   },
                 ),
                 const SizedBox(height: 25),
