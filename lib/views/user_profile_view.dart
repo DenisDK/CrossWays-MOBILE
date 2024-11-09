@@ -7,6 +7,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../auth/sign_in_with_google.dart';
 import '../components/alert_dialog_custom.dart';
 import '../components/animation_route.dart';
+import '../database/check_user_premium.dart';
 import 'about_as_view.dart';
 import 'log_in_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,11 +19,13 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   late Future<Map<String, dynamic>?> _userDataFuture;
+  bool isPremiumUser = false;
 
   @override
   void initState() {
     super.initState();
     _userDataFuture = _fetchUserData();
+    doesHasPremium();
   }
 
   Future<Map<String, dynamic>?> _fetchUserData() async {
@@ -36,6 +39,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
     }
     return null;
+  }
+
+  Future<void> doesHasPremium() async {
+    bool hasPremium = await checkUserPremiumStatus();
+    setState(() {
+      isPremiumUser = hasPremium;
+    });
   }
 
   @override
@@ -186,13 +196,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                name,
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 135, 100, 71),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    name + " ",
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 135, 100, 71),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  isPremiumUser
+                                  ? Icon(
+                                      Symbols.diamond_rounded,
+                                      color: Colors.brown,
+                                      size: 30,
+                                  )
+                                  : SizedBox()
+                                ],
                               ),
                               Text(
                                 "@" + nickname,

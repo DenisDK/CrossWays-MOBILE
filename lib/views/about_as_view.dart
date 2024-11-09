@@ -359,7 +359,6 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       ],
     );
   }
-
   void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,

@@ -13,6 +13,7 @@ import 'package:cross_ways/payment_config.dart';
 import 'package:cross_ways/database/update_premium.dart';
 import 'about_as_view.dart';
 import 'main_menu_view.dart';
+import 'package:cross_ways/database/check_user_premium.dart';
 
 class VipPurchaseScreen extends StatefulWidget {
   const VipPurchaseScreen({super.key});
@@ -21,6 +22,21 @@ class VipPurchaseScreen extends StatefulWidget {
 }
 
 class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
+  bool isPremiumUser = false;
+
+  @override
+  void initState() {
+    super.initState();
+    doesHasPremium();
+  }
+
+  Future<void> doesHasPremium() async {
+    bool hasPremium = await checkUserPremiumStatus();
+    setState(() {
+      isPremiumUser = hasPremium;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,13 +218,32 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           const SizedBox(height: 15,),
                           regularRow('Something something'),
                           const SizedBox(height: 50,),
-                          const Text(
-                            'You have this plan',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 135, 100, 71),
-                              fontSize: 25,
-                              fontWeight: FontWeight.w600,
+                          Container(
+                            width: 270,
+                            height: 60,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 92, 109, 103),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 3,
+                                  offset: Offset(0, 2),
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'You have this plan',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -258,29 +293,59 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           const SizedBox(height: 15,),
                           advancedRow('Something something'),
                           const SizedBox(height: 50,),
-                          GooglePayButton(
-                            paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
-                            paymentItems: const [
-                              PaymentItem(
-                                label: 'VIP Status',
-                                amount: '100',
-                                status: PaymentItemStatus.final_price,
+                          isPremiumUser
+                            ? Container(
+                              width: 270,
+                              height: 60,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 3,
+                                    offset: Offset(0, 2),
+                                    spreadRadius: 2,
+                                  ),
+                                ],
                               ),
-                            ],
-                            type: GooglePayButtonType.pay,
-                            margin: const EdgeInsets.only(top: 10.0),
-                            onPaymentResult: (result) {
-                              updateUserPremiumStatus();
-                              setState(() {
-
-                              });
-                            },
-                            loadingIndicator: const Center(
-                              child: CircularProgressIndicator(),
+                              child: const Center(
+                                child: Text(
+                                  'You have this plan',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 92, 109, 103),
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            )
+                            : GooglePayButton(
+                                paymentConfiguration:
+                                PaymentConfiguration.fromJsonString(defaultGooglePay),
+                                paymentItems: const [
+                                  PaymentItem(
+                                    label: 'VIP Status',
+                                    amount: '100',
+                                    status: PaymentItemStatus.final_price,
+                                  ),
+                                ],
+                                type: GooglePayButtonType.pay,
+                                margin: const EdgeInsets.only(top: 10.0),
+                                onPaymentResult: (result) {
+                                  updateUserPremiumStatus();
+                                  setState(() {
+                                    isPremiumUser = true;
+                                  });
+                                },
+                                loadingIndicator: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                width: 250,
+                                theme: GooglePayButtonTheme.light,
                             ),
-                            width: 250,
-                            theme: GooglePayButtonTheme.light,
-                          )
                         ],
                       ),
                     ),
