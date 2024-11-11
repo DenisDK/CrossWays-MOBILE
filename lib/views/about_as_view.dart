@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
@@ -7,7 +6,6 @@ import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
 
 import 'main_menu_view.dart';
@@ -58,8 +56,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
-                        context, PushPageRoute(page: (VipPurchaseScreen()))
-                    );
+                        context, PushPageRoute(page: (VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
@@ -151,7 +148,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             height: 775,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage('assets/main_menu_photos/1.jpg'),
+                                image:
+                                    AssetImage('assets/main_menu_photos/1.jpg'),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(30),
@@ -173,7 +171,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                       Shadow(
                                         offset: Offset(2, 2),
                                         blurRadius: 5,
-                                        color: Color.fromARGB(255, 92, 109, 103),
+                                        color:
+                                            Color.fromARGB(255, 92, 109, 103),
                                       ),
                                     ],
                                   ),
@@ -190,7 +189,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                       Shadow(
                                         offset: Offset(2, 2),
                                         blurRadius: 5,
-                                        color: Color.fromARGB(255, 92, 109, 103),
+                                        color:
+                                            Color.fromARGB(255, 92, 109, 103),
                                       ),
                                     ],
                                   ),
@@ -204,7 +204,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     ),
                     // Друга картка (About us)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 25),
                       child: Stack(
                         children: [
                           Container(
@@ -212,7 +213,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             height: 775,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage('assets/main_menu_photos/4.jpg'),
+                                image:
+                                    AssetImage('assets/main_menu_photos/4.jpg'),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(30),
@@ -245,12 +247,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                     ),
                                     textAlign: TextAlign.left,
                                   ),
-                                  SizedBox(height: 20),  // Заміна Padding для відступу між текстами
+                                  SizedBox(
+                                      height:
+                                          20), // Заміна Padding для відступу між текстами
                                   Text(
                                     '"CrossWays" is an international platform created to help people struggling '
-                                        'with finding company for their trips or feeling desire to improve its planning. '
-                                        'Developed by the group of particularly stubborn students, "CrossWays" has to offer '
-                                        'you a lot of useful tools for satisfying work and travel planning. Keep reading to know more.',
+                                    'with finding company for their trips or feeling desire to improve its planning. '
+                                    'Developed by the group of particularly stubborn students, "CrossWays" has to offer '
+                                    'you a lot of useful tools for satisfying work and travel planning. Keep reading to know more.',
                                     style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: 20,
@@ -301,12 +305,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                               _buildOpportunityItem(
                                 icon: Icons.compare_arrows,
                                 title: 'Travel matching',
-                                description: 'Filter travels and people by our special tool!',
+                                description:
+                                    'Filter travels and people by our special tool!',
                               ),
                               _buildOpportunityItem(
                                 icon: Icons.explore,
                                 title: 'Trip planning',
-                                description: 'We will help you with the "boring" stuff!',
+                                description:
+                                    'We will help you with the "boring" stuff!',
                               ),
                               _buildOpportunityItem(
                                 icon: Icons.help,
@@ -328,7 +334,10 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
     );
   }
 
-  Widget _buildOpportunityItem({required IconData icon, required String title, required String description}) {
+  Widget _buildOpportunityItem(
+      {required IconData icon,
+      required String title,
+      required String description}) {
     return Column(
       children: [
         CircleAvatar(
@@ -359,6 +368,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       ],
     );
   }
+
   void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,

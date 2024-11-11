@@ -9,8 +9,22 @@ Future<bool> checkUserPremiumStatus() async {
         .doc(user.uid)
         .get();
     return userDoc['isPremium'];
+  } else {
+    return false;
   }
-  else{
+}
+
+Future<bool> checkUserPremiumStatusById(String userId) async {
+  try {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('Users').doc(userId).get();
+
+    if (userDoc.exists && userDoc.data() != null) {
+      return userDoc['isPremium'] ?? false;
+    } else {
+      return false;
+    }
+  } catch (e) {
     return false;
   }
 }

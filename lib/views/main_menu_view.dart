@@ -2,6 +2,7 @@ import 'dart:math'; // Import the math package for Random
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/views/friend_search_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
@@ -89,8 +90,7 @@ class _MainMenuViewState extends State<MainMenuView> {
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
-                      context, PushPageRoute(page: (VipPurchaseScreen()))
-                    );
+                        context, PushPageRoute(page: (VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
@@ -154,14 +154,14 @@ class _MainMenuViewState extends State<MainMenuView> {
                     children: [
                       IconButton(
                         icon: const Icon(
-                          Symbols.account_circle_filled_rounded,
+                          Symbols.frame_inspect,
                           fill: 1,
                           color: Color.fromARGB(255, 135, 100, 71),
                           size: 40,
                         ),
                         onPressed: () {
-                          Navigator.push(context,
-                              PushPageRoute(page: UserProfileScreen()));
+                          Navigator.push(
+                              context, PushPageRoute(page: UserSearchScreen()));
                         },
                       ),
                       Builder(
@@ -247,7 +247,12 @@ class _MainMenuViewState extends State<MainMenuView> {
                             width: 250,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PushPageRoute(page: UserSearchScreen()),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 elevation: 9,
                                 shadowColor:
