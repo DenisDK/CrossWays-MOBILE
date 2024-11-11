@@ -10,8 +10,8 @@ import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-
 import 'about_as_view.dart';
+import 'package:cross_ways/database/delete_user.dart';
 
 class UserSettingsScreen extends StatelessWidget {
   @override
@@ -426,6 +426,36 @@ class UserSettingsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.brown[100],
+                            minimumSize: Size(double.infinity, 50)
+                          ),
+                          onPressed: () async {
+                            final bool? confirm = await CustomDialogAlert.showConfirmationDialog(context,
+                                'Confirmation of deletion',
+                                'Are you sure you want to delete your account? This action cannot be undone.');
+                            if(confirm == true){
+                              deleteUserFromDatabase();
+                              Navigator.pushReplacement(
+                                  context,
+                                  FadePageRoute(page: LogInScreen()));
+                            }
+                          },
+                          child: Text(
+                            'Delete account',
+                            style: TextStyle(
+                              color: Colors.red[400],
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            ),
+                          )
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
