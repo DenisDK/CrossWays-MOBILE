@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/database/update_user_data.dart';
+import 'package:cross_ways/views/user_friends_list_view.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cross_ways/auth/sign_in_with_google.dart';
@@ -64,12 +65,19 @@ class UserSettingsScreen extends StatelessWidget {
                   },
                 ),
                 ListTile(
+                  title: const Text('Friends',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                        context, PushPageRoute(page: UserFriendsListScreen()));
+                  },
+                ),
+                ListTile(
                   title: const Text('VIP',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
-                        context, PushPageRoute(page: (VipPurchaseScreen()))
-                    );
+                        context, PushPageRoute(page: (VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
@@ -430,30 +438,29 @@ class UserSettingsScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(top: 20),
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.brown[100],
-                            minimumSize: Size(double.infinity, 50)
-                          ),
-                          onPressed: () async {
-                            final bool? confirm = await CustomDialogAlert.showConfirmationDialog(context,
-                                'Confirmation of deletion',
-                                'Are you sure you want to delete your account? This action cannot be undone.');
-                            if(confirm == true){
-                              deleteUserFromDatabase();
-                              Navigator.pushReplacement(
-                                  context,
-                                  FadePageRoute(page: LogInScreen()));
-                            }
-                          },
-                          child: Text(
-                            'Delete account',
-                            style: TextStyle(
-                              color: Colors.red[400],
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
-                          )
-                        ),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.brown[100],
+                                minimumSize: Size(double.infinity, 50)),
+                            onPressed: () async {
+                              final bool? confirm = await CustomDialogAlert
+                                  .showConfirmationDialog(
+                                      context,
+                                      'Confirmation of deletion',
+                                      'Are you sure you want to delete your account? This action cannot be undone.');
+                              if (confirm == true) {
+                                deleteUserFromDatabase();
+                                Navigator.pushReplacement(context,
+                                    FadePageRoute(page: LogInScreen()));
+                              }
+                            },
+                            child: Text(
+                              'Delete account',
+                              style: TextStyle(
+                                color: Colors.red[400],
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                              ),
+                            )),
                       ),
                     )
                   ],

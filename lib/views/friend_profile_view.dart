@@ -59,12 +59,12 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
 
             return Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Row(
+                      Row(
                         children: [
                           Text(
                             'CrossWays',
@@ -81,16 +81,6 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                             size: 30,
                           ),
                         ],
-                      ),
-                      Builder(
-                        builder: (context) => IconButton(
-                          icon: const Icon(
-                            Symbols.format_list_bulleted,
-                            color: Color.fromARGB(255, 135, 100, 71),
-                            size: 35,
-                          ),
-                          onPressed: () => Scaffold.of(context).openEndDrawer(),
-                        ),
                       ),
                     ],
                   ),

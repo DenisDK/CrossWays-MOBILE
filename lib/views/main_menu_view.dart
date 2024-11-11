@@ -4,6 +4,7 @@ import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/friend_search_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
+import 'package:cross_ways/views/user_friends_list_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +84,14 @@ class _MainMenuViewState extends State<MainMenuView> {
                       context,
                       PushPageRoute(page: const MainMenuView()),
                     );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Friends',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                        context, PushPageRoute(page: UserFriendsListScreen()));
                   },
                 ),
                 ListTile(

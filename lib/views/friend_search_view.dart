@@ -1,10 +1,12 @@
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/database/add_friend_method.dart';
 import 'package:cross_ways/views/about_as_view.dart';
 import 'package:cross_ways/views/friend_profile_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
+import 'package:cross_ways/views/user_friends_list_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
@@ -57,6 +59,14 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const MainMenuView()));
+                  },
+                ),
+                ListTile(
+                  title: const Text('Friends',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                        context, PushPageRoute(page: UserFriendsListScreen()));
                   },
                 ),
                 ListTile(
@@ -220,7 +230,9 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                         ),
                         trailing: IconButton(
                           icon: const Icon(Icons.add, color: Colors.brown),
-                          onPressed: () {},
+                          onPressed: () {
+                            addFriend(user.id, context);
+                          },
                         ),
                         onTap: () {
                           Navigator.push(

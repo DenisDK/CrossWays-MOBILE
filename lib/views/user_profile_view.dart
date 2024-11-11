@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
+import 'package:cross_ways/views/user_friends_list_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       context,
                       PushPageRoute(page: const MainMenuView()),
                     );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Friends',
+                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                        context, PushPageRoute(page: UserFriendsListScreen()));
                   },
                 ),
                 ListTile(
