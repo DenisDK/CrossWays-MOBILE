@@ -35,10 +35,10 @@ class CustomDialogAlert {
                 Navigator.of(context).pop(false);
               },
               child: const Text(
-                'Ні',
+                'No',
                 style: TextStyle(
                   color: Color.fromARGB(255, 135, 100, 71),
-                   fontSize: 16,
+                  fontSize: 16,
                 ),
               ),
             ),
@@ -47,10 +47,10 @@ class CustomDialogAlert {
                 Navigator.of(context).pop(true);
               },
               child: const Text(
-                'Так',
+                'Yes',
                 style: TextStyle(
                   color: Color.fromARGB(255, 135, 100, 71),
-                   fontSize: 16,
+                  fontSize: 16,
                 ),
               ),
             ),

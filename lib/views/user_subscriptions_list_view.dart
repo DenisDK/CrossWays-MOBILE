@@ -3,7 +3,7 @@ import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
 import 'package:cross_ways/views/about_as_view.dart';
-import 'package:cross_ways/views/friend_profile_view.dart';
+import 'package:cross_ways/views/subscriber_profile_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
@@ -14,12 +14,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-class UserFriendsListScreen extends StatefulWidget {
+class UserSubscriptionsListScreen extends StatefulWidget {
   @override
-  _UserFriendsListScreenState createState() => _UserFriendsListScreenState();
+  _UserSubscriptionsListScreenState createState() =>
+      _UserSubscriptionsListScreenState();
 }
 
-class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
+class _UserSubscriptionsListScreenState
+    extends State<UserSubscriptionsListScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late User? currentUser;
 
@@ -67,11 +69,11 @@ class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Friends',
+                  title: const Text('Subscriptions',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: UserFriendsListScreen()));
+                    Navigator.push(context,
+                        PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
@@ -173,12 +175,12 @@ class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
                 }
 
                 final userData = snapshot.data!.data() as Map<String, dynamic>;
-                final List<dynamic> friendsList =
+                final List<dynamic> subscriptionsList =
                     userData['travelCompanions'] ?? [];
 
-                if (friendsList.isEmpty) {
+                if (subscriptionsList.isEmpty) {
                   return const Center(
-                      child: Text('Ops... You don\'t have friends now.',
+                      child: Text('Ops... You don\'t have subscriptions now.',
                           style: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                               fontSize: 20)));
@@ -190,7 +192,7 @@ class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
                       padding:
                           EdgeInsets.symmetric(vertical: 10.0, horizontal: 22),
                       child: Text(
-                        'Friends:',
+                        'Subscriptions:',
                         style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -199,47 +201,48 @@ class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: friendsList.length,
+                      itemCount: subscriptionsList.length,
                       itemBuilder: (context, index) {
-                        final friendId = friendsList[index];
+                        final subscriberId = subscriptionsList[index];
 
                         return FutureBuilder<DocumentSnapshot>(
                           future: FirebaseFirestore.instance
                               .collection('Users')
-                              .doc(friendId)
+                              .doc(subscriberId)
                               .get(),
                           builder: (context,
-                              AsyncSnapshot<DocumentSnapshot> friendSnapshot) {
-                            if (friendSnapshot.connectionState ==
+                              AsyncSnapshot<DocumentSnapshot>
+                                  subscriptionsSnapshot) {
+                            if (subscriptionsSnapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return const ListTile(title: Text('Loading...'));
                             }
 
-                            if (friendSnapshot.hasError) {
+                            if (subscriptionsSnapshot.hasError) {
                               return const ListTile(
-                                  title: Text('Error loading friend data'));
+                                  title: Text('Error loading subscriber data'));
                             }
 
-                            if (!friendSnapshot.hasData ||
-                                !friendSnapshot.data!.exists) {
+                            if (!subscriptionsSnapshot.hasData ||
+                                !subscriptionsSnapshot.data!.exists) {
                               FirebaseFirestore.instance
                                   .collection('Users')
                                   .doc(currentUser!.uid)
                                   .update({
                                 'travelCompanions':
-                                    FieldValue.arrayRemove([friendId]),
+                                    FieldValue.arrayRemove([subscriberId]),
                               });
                               return const ListTile(
-                                  title: Text('Friend not found'));
+                                  title: Text('Subscriptions not found'));
                             }
 
-                            final friendData = friendSnapshot.data!.data()
-                                as Map<String, dynamic>;
+                            final subscribeData = subscriptionsSnapshot.data!
+                                .data() as Map<String, dynamic>;
                             final nickname =
-                                friendData['nickname'] ?? 'Unknown';
-                            final gender = friendData['gender'] ?? 'Unknown';
+                                subscribeData['nickname'] ?? 'Unknown';
+                            final gender = subscribeData['gender'] ?? 'Unknown';
                             final profileImage =
-                                friendData['profileImage'] ?? '';
+                                subscribeData['profileImage'] ?? '';
 
                             return ListTile(
                               leading: CircleAvatar(
@@ -256,7 +259,7 @@ class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
                                   color: Colors.brown,
                                 ),
                                 onPressed: () {
-                                  _removeFriend(friendId);
+                                  _removeSubscriber(subscriberId);
                                 },
                               ),
                               onTap: () {
@@ -264,7 +267,8 @@ class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        FriendProfileScreen(uid: friendId),
+                                        SubscriberProfileScreen(
+                                            uid: subscriberId),
                                   ),
                                 );
                               },
@@ -283,33 +287,33 @@ class _UserFriendsListScreenState extends State<UserFriendsListScreen> {
     );
   }
 
-  Future<void> _removeFriend(String friendId) async {
+  Future<void> _removeSubscriber(String subscriptionsId) async {
     bool? isConfirmed = await CustomDialogAlert.showConfirmationDialog(
       context,
       'Are you sure?',
-      'Do you want to delete this friend from your list?',
+      'Do you want to delete this subscriptions from your list?',
     );
 
     if (isConfirmed == true) {
-      final friendListRef =
+      final subscriptionsListRef =
           FirebaseFirestore.instance.collection('Users').doc(currentUser!.uid);
 
       try {
-        await friendListRef.update({
-          'travelCompanions': FieldValue.arrayRemove([friendId]),
+        await subscriptionsListRef.update({
+          'travelCompanions': FieldValue.arrayRemove([subscriptionsId]),
         });
 
         CustomAlert.show(
           context: context,
           title: 'Success',
-          content: 'Friend removed successfully!',
+          content: 'Subscriptions removed successfully!',
           buttonText: 'OK',
         );
       } catch (e) {
         CustomAlert.show(
           context: context,
           title: 'Error',
-          content: 'Error removing friend: $e',
+          content: 'Error removing subscriptions: $e',
           buttonText: 'OK',
         );
       }

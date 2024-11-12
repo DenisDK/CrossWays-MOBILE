@@ -4,15 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 
-Future<void> addFriend(String friendId, BuildContext context) async {
+Future<void> addSubscription(String subscriberId, BuildContext context) async {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('Users');
   final String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   bool? result = await CustomDialogAlert.showConfirmationDialog(
     context,
-    'Add Friend',
-    'Are you sure you want to add this friend?',
+    'Subscribe ?',
+    'Are you sure you want to add this user to your subscriptions ?',
   );
 
   if (result != null && result) {
@@ -20,8 +20,8 @@ Future<void> addFriend(String friendId, BuildContext context) async {
     final currentUserTravelCompanions =
         List.from(currentUserDoc['travelCompanions'] ?? []);
 
-    if (!currentUserTravelCompanions.contains(friendId)) {
-      currentUserTravelCompanions.add(friendId);
+    if (!currentUserTravelCompanions.contains(subscriberId)) {
+      currentUserTravelCompanions.add(subscriberId);
       await users
           .doc(currentUserId)
           .update({'travelCompanions': currentUserTravelCompanions});
@@ -29,14 +29,14 @@ Future<void> addFriend(String friendId, BuildContext context) async {
       CustomAlert.show(
         context: context,
         title: 'Success',
-        content: 'You are now friends!',
+        content: 'You are now have subscriptions!',
         buttonText: 'OK',
       );
     } else {
       CustomAlert.show(
         context: context,
-        title: 'Already Friends',
-        content: 'You are already friends.',
+        title: 'Already subscribe',
+        content: 'You are already subscribe.',
         buttonText: 'OK',
       );
     }

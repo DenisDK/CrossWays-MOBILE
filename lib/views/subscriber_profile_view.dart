@@ -3,16 +3,17 @@ import 'package:cross_ways/database/check_user_premium.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-class FriendProfileScreen extends StatefulWidget {
+class SubscriberProfileScreen extends StatefulWidget {
   final String uid;
 
-  FriendProfileScreen({required this.uid});
+  SubscriberProfileScreen({required this.uid});
 
   @override
-  _FriendProfileScreenState createState() => _FriendProfileScreenState();
+  _SubscriberProfileScreenState createState() =>
+      _SubscriberProfileScreenState();
 }
 
-class _FriendProfileScreenState extends State<FriendProfileScreen> {
+class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
   late Future<Map<String, dynamic>?> _userDataFuture;
   bool isPremiumUser = false;
 

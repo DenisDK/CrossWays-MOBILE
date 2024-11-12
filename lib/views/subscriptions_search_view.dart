@@ -1,12 +1,12 @@
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
-import 'package:cross_ways/database/add_friend_method.dart';
+import 'package:cross_ways/database/add_subscriptions_method.dart';
 import 'package:cross_ways/views/about_as_view.dart';
-import 'package:cross_ways/views/friend_profile_view.dart';
+import 'package:cross_ways/views/subscriber_profile_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
-import 'package:cross_ways/views/user_friends_list_view.dart';
+import 'package:cross_ways/views/user_subscriptions_list_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
@@ -62,11 +62,11 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Friends',
+                  title: const Text('Subscriptions',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: UserFriendsListScreen()));
+                    Navigator.push(context,
+                        PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
@@ -231,7 +231,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                         trailing: IconButton(
                           icon: const Icon(Icons.add, color: Colors.brown),
                           onPressed: () {
-                            addFriend(user.id, context);
+                            addSubscription(user.id, context);
                           },
                         ),
                         onTap: () {
@@ -239,7 +239,7 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  FriendProfileScreen(uid: user.id),
+                                  SubscriberProfileScreen(uid: user.id),
                             ),
                           );
                         },

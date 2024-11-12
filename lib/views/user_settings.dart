@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/database/update_user_data.dart';
-import 'package:cross_ways/views/user_friends_list_view.dart';
+import 'package:cross_ways/views/user_subscriptions_list_view.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cross_ways/auth/sign_in_with_google.dart';
@@ -65,11 +65,11 @@ class UserSettingsScreen extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  title: const Text('Friends',
+                  title: const Text('Subscriptions',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: UserFriendsListScreen()));
+                    Navigator.push(context,
+                        PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
