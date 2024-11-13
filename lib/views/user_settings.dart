@@ -21,6 +21,10 @@ class UserSettingsScreen extends StatelessWidget {
     TextEditingController usernameController = TextEditingController();
     TextEditingController aboutController = TextEditingController();
 
+    bool isNullOrWhiteSpace(String? value) {
+      return value == null || value.trim().isEmpty;
+    }
+
     Future<String?> getUserAvatarUrl() async {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -312,7 +316,8 @@ class UserSettingsScreen extends StatelessWidget {
                                             ? usernameController.text
                                             : null;
 
-                                    if (name != null || username != null) {
+                                    if (!isNullOrWhiteSpace(name) ||
+                                        !isNullOrWhiteSpace(username)) {
                                       await updateProfileNameUsername(
                                           context, name, username);
                                       Navigator.push(
@@ -483,9 +488,9 @@ void _handleSignOut(BuildContext context) async {
   if (result != null && result) {
     bool isUserSignOut = await signOut();
     if (isUserSignOut) {
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushAndRemoveUntil(
         FadePageRoute(page: LogInScreen()),
+        (Route<dynamic> route) => false,
       );
     }
   }

@@ -354,9 +354,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     if (result != null && result) {
       bool isUserSignOut = await signOut();
       if (isUserSignOut) {
-        Navigator.pushReplacement(
-          context,
+        Navigator.of(context).pushAndRemoveUntil(
           FadePageRoute(page: LogInScreen()),
+          (Route<dynamic> route) => false,
         );
       }
     }

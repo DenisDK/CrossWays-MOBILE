@@ -64,8 +64,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   title: const Text('VIP',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: (VipPurchaseScreen())));
+                    Navigator.push(context,
+                        PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
@@ -156,7 +156,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             width: 380,
                             height: 775,
                             decoration: BoxDecoration(
-                              image: DecorationImage(
+                              image: const DecorationImage(
                                 image:
                                     AssetImage('assets/main_menu_photos/1.jpg'),
                                 fit: BoxFit.cover,
@@ -221,7 +221,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             width: 380,
                             height: 775,
                             decoration: BoxDecoration(
-                              image: DecorationImage(
+                              image: const DecorationImage(
                                 image:
                                     AssetImage('assets/main_menu_photos/4.jpg'),
                                 fit: BoxFit.cover,
@@ -367,7 +367,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
         const SizedBox(height: 5),
         Text(
           description,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
             color: Color.fromARGB(255, 135, 100, 71),
@@ -387,9 +387,9 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
     if (result != null && result) {
       bool isUserSignOut = await signOut();
       if (isUserSignOut) {
-        Navigator.pushReplacement(
-          context,
+        Navigator.of(context).pushAndRemoveUntil(
           FadePageRoute(page: LogInScreen()),
+          (Route<dynamic> route) => false,
         );
       }
     }
