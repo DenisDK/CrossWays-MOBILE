@@ -11,16 +11,40 @@ Future<void> addSubscription(String subscriberId, BuildContext context) async {
 
   bool? result = await CustomDialogAlert.showConfirmationDialog(
     context,
-    'Subscribe ?',
-    'Are you sure you want to add this user to your subscriptions ?',
+    'Subscribe?',
+    'Are you sure you want to add this user to your subscriptions?',
   );
 
   if (result != null && result) {
-    final currentUserDoc = await users.doc(currentUserId).get();
-    final currentUserTravelCompanions =
-        List.from(currentUserDoc['travelCompanions'] ?? []);
+    try {
+      final currentUserDoc = await users.doc(currentUserId).get();
+      final currentUserData = currentUserDoc.data() as Map<String, dynamic>;
 
-    if (!currentUserTravelCompanions.contains(subscriberId)) {
+      final List<dynamic> currentUserTravelCompanions =
+          List.from(currentUserData['travelCompanions'] ?? []);
+      final bool isPremium = currentUserData['isPremium'] ?? false;
+
+      if (currentUserTravelCompanions.contains(subscriberId)) {
+        CustomAlert.show(
+          context: context,
+          title: 'Already subscribed',
+          content: 'You are already subscribed to this user.',
+          buttonText: 'OK',
+        );
+        return;
+      }
+
+      if (!isPremium && currentUserTravelCompanions.length >= 10) {
+        CustomAlert.show(
+          context: context,
+          title: 'Limit reached',
+          content:
+              'You can only have up to 10 subscriptions. Upgrade to premium to add more.',
+          buttonText: 'OK',
+        );
+        return;
+      }
+
       currentUserTravelCompanions.add(subscriberId);
       await users
           .doc(currentUserId)
@@ -29,14 +53,14 @@ Future<void> addSubscription(String subscriberId, BuildContext context) async {
       CustomAlert.show(
         context: context,
         title: 'Success',
-        content: 'You are now have subscriptions!',
+        content: 'You have successfully subscribed!',
         buttonText: 'OK',
       );
-    } else {
+    } catch (e) {
       CustomAlert.show(
         context: context,
-        title: 'Already subscribe',
-        content: 'You are already subscribe.',
+        title: 'Error',
+        content: 'An error occurred while adding the subscription: $e',
         buttonText: 'OK',
       );
     }

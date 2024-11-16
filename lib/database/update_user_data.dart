@@ -58,43 +58,75 @@ Future<void> uploadAvatar(BuildContext context) async {
   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
   if (pickedFile == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Файл не вибрано')),
+    );
     return;
   }
 
   final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return;
+  if (user == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Користувач не авторизований')),
+    );
+    return;
+  }
 
   final userRef = FirebaseFirestore.instance.collection('Users').doc(user.uid);
   final userDoc = await userRef.get();
 
-  final oldAvatarUrl = userDoc['profileImage'];
-  if (oldAvatarUrl != null) {
-    try {
-      // Видалення старого аватара з Firebase Storage
-      final storageRef = FirebaseStorage.instance.refFromURL(oldAvatarUrl);
-      await storageRef.delete();
-    } catch (e) {
-      log('Error deleting old avatar: $e');
-    }
+  final isPremium = userDoc.data()?['isPremium'] ?? false;
+
+  final file = File(pickedFile.path);
+
+  final fileSize = await file.length();
+  if (fileSize > 4 * 1024 * 1024) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('Розмір файлу не повинен перевищувати 4 МБ')),
+    );
+    return;
   }
 
   try {
-    final storageRef =
-        FirebaseStorage.instance.ref().child('profileImages/${user.uid}.jpg');
-    await storageRef.putFile(File(pickedFile.path));
+    String avatarPath;
 
-    String avatarUrl = await storageRef.getDownloadURL();
+    if (isPremium && pickedFile.name.endsWith('.gif')) {
+      avatarPath = 'avatars/${user.uid}/animated_avatar.gif';
+    } else if (!pickedFile.name.endsWith('.gif')) {
+      avatarPath = 'profileImages/${user.uid}.jpg';
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'Анімовані аватарки доступні лише для Premium користувачів')),
+      );
+      return;
+    }
 
-    await userRef.update({
-      'profileImage': avatarUrl,
-    });
+    final oldAvatarUrl = userDoc['profileImage'];
+    if (oldAvatarUrl != null) {
+      try {
+        final storageRef = FirebaseStorage.instance.refFromURL(oldAvatarUrl);
+        await storageRef.delete();
+      } catch (e) {
+        log('Error deleting old avatar: $e');
+      }
+    }
+
+    final storageRef = FirebaseStorage.instance.ref().child(avatarPath);
+    await storageRef.putFile(file);
+
+    final downloadUrl = await storageRef.getDownloadURL();
+
+    await userRef.update({'profileImage': downloadUrl});
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Avatar updated successfully!')),
+      const SnackBar(content: Text('Аватарка успішно оновлена!')),
     );
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Failed to upload avatar.')),
+      SnackBar(content: Text('Помилка завантаження аватара: $e')),
     );
   }
 }
