@@ -215,19 +215,15 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        regularRow('Something something'),
+                        regularRow('Subscribe only 10 people'),
                         const SizedBox(
                           height: 15,
                         ),
-                        regularRow('Something something'),
+                        regularRow('Have only 10 active trips'),
                         const SizedBox(
                           height: 15,
                         ),
-                        regularRow('Something something'),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        regularRow('Something something'),
+                        regularRow('Add photo to your profile picture'),
                         const SizedBox(
                           height: 50,
                         ),
@@ -265,7 +261,7 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                   const SizedBox(height: 30),
                   // Друга картка (ВІП)
                   Container(
-                    height: 550,
+                    height: 630,
                     width: 370,
                     decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 92, 109, 103),
@@ -297,19 +293,19 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        advancedRow('Something something'),
+                        advancedRow('Subscribe unlimited number of people'),
                         const SizedBox(
                           height: 15,
                         ),
-                        advancedRow('Something something'),
+                        advancedRow('Have unlimited number of active trips'),
                         const SizedBox(
                           height: 15,
                         ),
-                        advancedRow('Something something'),
+                        advancedRow('Add gif to your profile picture'),
                         const SizedBox(
                           height: 15,
                         ),
-                        advancedRow('Something something'),
+                        advancedRow('Make your account private'),
                         const SizedBox(
                           height: 50,
                         ),
@@ -383,47 +379,59 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
   // Для зменшення коду (Стандартна карточка)
   regularRow(String textToShow) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        SizedBox(width: 45,),
         const Icon(
           Icons.check,
           size: 30,
           color: Color.fromARGB(255, 135, 100, 71),
         ),
-        const SizedBox(width: 40),
-        Text(
-          textToShow,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Color.fromARGB(255, 135, 100, 71),
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
+        const SizedBox(width: 20),
+        Container(
+          width: 230,
+          child: Text(
+            textToShow,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              color: Color.fromARGB(255, 135, 100, 71),
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
+        )
       ],
     );
   }
 
+
+
   // Для зменшення коду (Покращена карточка)
   advancedRow(String textToShow) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        SizedBox(width: 45,),
         const Icon(
           Icons.star,
           size: 30,
           color: Colors.white,
         ),
-        const SizedBox(width: 40),
-        Text(
-          textToShow,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
+        const SizedBox(width: 20),
+        Container(
+          width: 220,
+          child: Text(
+            textToShow,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
+        )
       ],
     );
   }
