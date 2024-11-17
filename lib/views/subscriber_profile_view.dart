@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/database/check_user_premium.dart';
+import 'package:cross_ways/database/check_user_private.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -16,12 +17,14 @@ class SubscriberProfileScreen extends StatefulWidget {
 class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
   late Future<Map<String, dynamic>?> _userDataFuture;
   bool isPremiumUser = false;
+  bool isPrivateUser = false;
 
   @override
   void initState() {
     super.initState();
     _userDataFuture = _fetchUserData(widget.uid);
     doesHasPremium(widget.uid);
+    doesAccountPrivate(widget.uid);
   }
 
   Future<Map<String, dynamic>?> _fetchUserData(String uid) async {
@@ -37,6 +40,13 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
     bool hasPremium = await checkUserPremiumStatusById(userId);
     setState(() {
       isPremiumUser = hasPremium;
+    });
+  }
+
+  Future<void> doesAccountPrivate(String userId) async {
+    bool isPrivate = await checkUserPrivateStatusById(userId);
+    setState(() {
+      isPrivateUser = isPrivate;
     });
   }
 
@@ -134,14 +144,18 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                   color: Color.fromARGB(255, 135, 100, 71),
                                 ),
                               ),
-                              Text(
+                              isPrivateUser
+                                ? SizedBox()
+                                :Text(
                                 gender,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   color: Color.fromARGB(255, 135, 100, 71),
                                 ),
                               ),
-                              Row(
+                              isPrivateUser
+                                  ? SizedBox()
+                                  :Row(
                                 children: List.generate(5, (index) {
                                   return Icon(
                                     index < 4 ? Icons.star : Icons.star_border,
@@ -155,7 +169,21 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                         ],
                       ),
                       const SizedBox(height: 30),
-                      const Text(
+                      isPrivateUser
+                          ? const Padding(
+                              padding: EdgeInsets.only(top: 100),
+                              child: Center(
+                                child: Text(
+                                  'This profile is Private',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 135, 100, 71),
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )
+                          :const Text(
                         'About me',
                         style: TextStyle(
                           color: Color.fromARGB(255, 135, 100, 71),
@@ -164,7 +192,9 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Container(
+                      isPrivateUser
+                          ? SizedBox()
+                          :Container(
                         width: 500,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(90, 135, 100, 71),
@@ -195,7 +225,9 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Row(
+                      isPrivateUser
+                          ? SizedBox()
+                          :Row(
                         children: [
                           const Text(
                             'Travels',
@@ -216,7 +248,9 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      travels.isNotEmpty
+                      isPrivateUser
+                          ? SizedBox()
+                          :travels.isNotEmpty
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: travels.map((travel) {
