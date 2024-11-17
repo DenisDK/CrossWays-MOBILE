@@ -11,10 +11,43 @@ import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../database/check_user_premium.dart';
+import '../database/check_user_private.dart';
+import '../database/update_user_private.dart';
 import 'about_as_view.dart';
 import 'package:cross_ways/database/delete_user.dart';
 
-class UserSettingsScreen extends StatelessWidget {
+class UserSettingsScreen extends StatefulWidget {
+  @override
+  _UserSettingsScreenState createState() => _UserSettingsScreenState();
+}
+
+class _UserSettingsScreenState extends State<UserSettingsScreen> {
+  bool isPremiumUser = false;
+  bool isPrivateUser = false;
+
+  @override
+  void initState() {
+    super.initState();
+    User? user = FirebaseAuth.instance.currentUser;
+    doesHasPremium(user!.uid);
+    doesAccountPrivate(user!.uid);
+  }
+
+  Future<void> doesHasPremium(String userId) async {
+    bool hasPremium = await checkUserPremiumStatusById(userId);
+    setState(() {
+      isPremiumUser = hasPremium;
+    });
+  }
+
+  Future<void> doesAccountPrivate(String userId) async {
+    bool isPrivate = await checkUserPrivateStatusById(userId);
+    setState(() {
+      isPrivateUser = isPrivate;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     TextEditingController nameController = TextEditingController();
@@ -204,7 +237,7 @@ class UserSettingsScreen extends StatelessWidget {
                                       return CircleAvatar(
                                         radius: 77,
                                         backgroundImage:
-                                            NetworkImage(snapshot.data!),
+                                        NetworkImage(snapshot.data!),
                                       );
                                     } else {
                                       return const CircleAvatar(
@@ -238,7 +271,46 @@ class UserSettingsScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    isPremiumUser
+                      ? Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        color: Colors.brown[100],
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Make profile private',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown,
+                                ),
+                              ),
+                              Switch(
+                                value: isPrivateUser,
+                                inactiveTrackColor: Colors.brown[100],
+                                inactiveThumbColor: Colors.brown,
+                                activeColor: const Color(0xFF5C6D67),
+                                onChanged: (value) {
+                                  setState(() {
+                                    isPrivateUser = value;
+                                    updateUserPrivateStatus();
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                    : SizedBox(),
+                    const SizedBox(height: 16),
                     Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -260,7 +332,7 @@ class UserSettingsScreen extends StatelessWidget {
                             const SizedBox(height: 8),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              const EdgeInsets.symmetric(vertical: 8.0),
                               child: TextField(
                                 controller: nameController,
                                 decoration: InputDecoration(
@@ -281,7 +353,7 @@ class UserSettingsScreen extends StatelessWidget {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              const EdgeInsets.symmetric(vertical: 8.0),
                               child: TextField(
                                 controller: usernameController,
                                 decoration: InputDecoration(
@@ -308,13 +380,13 @@ class UserSettingsScreen extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     String? name =
-                                        nameController.text.isNotEmpty
-                                            ? nameController.text
-                                            : null;
+                                    nameController.text.isNotEmpty
+                                        ? nameController.text
+                                        : null;
                                     String? username =
-                                        usernameController.text.isNotEmpty
-                                            ? usernameController.text
-                                            : null;
+                                    usernameController.text.isNotEmpty
+                                        ? usernameController.text
+                                        : null;
 
                                     if (!isNullOrWhiteSpace(name) ||
                                         !isNullOrWhiteSpace(username)) {
@@ -373,13 +445,13 @@ class UserSettingsScreen extends StatelessWidget {
                             const SizedBox(height: 8),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              const EdgeInsets.symmetric(vertical: 8.0),
                               child: TextField(
                                 controller: aboutController,
                                 maxLines: 3,
                                 style: const TextStyle(
                                   fontSize:
-                                      16, // Встановіть бажаний розмір шрифту
+                                  16, // Встановіть бажаний розмір шрифту
                                 ),
                                 decoration: InputDecoration(
                                   labelText: 'About yourself',
@@ -403,9 +475,9 @@ class UserSettingsScreen extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     String? about =
-                                        aboutController.text.isNotEmpty
-                                            ? aboutController.text
-                                            : null;
+                                    aboutController.text.isNotEmpty
+                                        ? aboutController.text
+                                        : null;
                                     if (about != null) {
                                       await updateProfileAbout(context, about);
                                       Navigator.push(
@@ -449,9 +521,9 @@ class UserSettingsScreen extends StatelessWidget {
                             onPressed: () async {
                               final bool? confirm = await CustomDialogAlert
                                   .showConfirmationDialog(
-                                      context,
-                                      'Confirmation of deletion',
-                                      'Are you sure you want to delete your account? This action cannot be undone.');
+                                  context,
+                                  'Confirmation of deletion',
+                                  'Are you sure you want to delete your account? This action cannot be undone.');
                               if (confirm == true) {
                                 deleteUserFromDatabase();
                                 Navigator.pushReplacement(context,
