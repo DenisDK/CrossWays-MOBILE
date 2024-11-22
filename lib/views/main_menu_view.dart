@@ -3,6 +3,7 @@ import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/views/create_trips_view.dart';
+import 'package:cross_ways/views/join_trips_view.dart';
 import 'package:cross_ways/views/subscriptions_search_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/user_subscriptions_list_view.dart';
@@ -282,7 +283,12 @@ class _MainMenuViewState extends State<MainMenuView> {
                             width: 250,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PushPageRoute(page: JoinTripScreen()),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 elevation: 9,
                                 shadowColor:
