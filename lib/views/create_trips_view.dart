@@ -1,3 +1,5 @@
+import 'package:cross_ways/components/custom_error_alert.dart';
+import 'package:cross_ways/database/create_trip.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -9,11 +11,20 @@ class CreateTripScreen extends StatefulWidget {
 
 class _CreateTripScreenState extends State<CreateTripScreen> {
   File? _image;
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _fromController = TextEditingController();
+  final TextEditingController _toController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _memberLimitController = TextEditingController();
+
+  DateTime? _fromDate;
+  DateTime? _toDate;
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
+    await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
@@ -22,38 +33,42 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
     }
   }
 
+  Future<void> _selectDate(
+      BuildContext context, bool isFromDate) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: const Color.fromARGB(255, 135, 100, 71),
+            hintColor: const Color.fromARGB(255, 135, 100, 71),
+            colorScheme: const ColorScheme.light(
+                primary: Color.fromARGB(255, 135, 100, 71)),
+            buttonTheme:
+            const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setState(() {
+        if (isFromDate) {
+          _fromDate = picked;
+          _fromController.text = "${picked.day.toString().padLeft(2, '0')}.${picked.month.toString().padLeft(2, '0')}.${picked.year}";
+        } else {
+          _toDate = picked;
+          _toController.text = "${picked.day.toString().padLeft(2, '0')}.${picked.month.toString().padLeft(2, '0')}.${picked.year}";
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future<void> _selectDate(
-        BuildContext context, TextEditingController controller) async {
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-              primaryColor: const Color.fromARGB(255, 135, 100, 71),
-              hintColor: const Color.fromARGB(255, 135, 100, 71),
-              colorScheme: const ColorScheme.light(
-                  primary: Color.fromARGB(255, 135, 100, 71)),
-              buttonTheme:
-                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-            ),
-            child: child!,
-          );
-        },
-      );
-      if (picked != null) {
-        controller.text =
-            "${picked.day.toString().padLeft(2, '0')}.${picked.month.toString().padLeft(2, '0')}.${picked.year}";
-      }
-    }
-
-    final TextEditingController fromController = TextEditingController();
-    final TextEditingController toController = TextEditingController();
-
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -91,18 +106,18 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                   borderRadius: BorderRadius.circular(12),
                   image: _image != null
                       ? DecorationImage(
-                          image: FileImage(_image!),
-                          fit: BoxFit.cover,
-                        )
+                    image: FileImage(_image!),
+                    fit: BoxFit.cover,
+                  )
                       : null,
                 ),
                 child: _image == null
                     ? Center(
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: Colors.grey.shade600,
-                        ),
-                      )
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: Colors.grey.shade600,
+                  ),
+                )
                     : null,
               ),
             ),
@@ -113,7 +128,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF5C6D67),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 172, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 172, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -139,6 +154,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             ),
             const SizedBox(height: 8),
             TextField(
+              controller: _countryController,
               decoration: InputDecoration(
                 hintText: '',
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -164,7 +180,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: fromController,
+                    controller: _fromController,
                     readOnly: true,
                     decoration: InputDecoration(
                       hintText: 'From',
@@ -176,7 +192,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                       ),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.calendar_today),
-                        onPressed: () => _selectDate(context, fromController),
+                        onPressed: () => _selectDate(context, true),
                       ),
                     ),
                   ),
@@ -184,7 +200,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
-                    controller: toController,
+                    controller: _toController,
                     readOnly: true,
                     decoration: InputDecoration(
                       hintText: 'To',
@@ -196,7 +212,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                       ),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.calendar_today),
-                        onPressed: () => _selectDate(context, toController),
+                        onPressed: () => _selectDate(context, false),
                       ),
                     ),
                   ),
@@ -214,6 +230,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             ),
             const SizedBox(height: 8),
             TextField(
+              controller: _titleController,
               decoration: InputDecoration(
                 hintText: '',
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -236,6 +253,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             ),
             const SizedBox(height: 8),
             TextField(
+              controller: _descriptionController,
               maxLines: 4,
               decoration: InputDecoration(
                 hintText: '',
@@ -259,6 +277,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             ),
             const SizedBox(height: 8),
             TextField(
+              controller: _memberLimitController,
               decoration: InputDecoration(
                 hintText: '',
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -270,31 +289,84 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF5C6D67),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 100, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: const Text(
-                  'Create',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFFFFFFFF),
-                    fontWeight: FontWeight.w600,
-                  ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                final country = _countryController.text;
+                final title = _titleController.text;
+                final description = _descriptionController.text;
+                final memberLimit = int.tryParse(_memberLimitController.text);
+
+                // Перевірка на заповненість основних полів
+                if (country.isEmpty || title.isEmpty || description.isEmpty) {
+                  CustomAlert.show(context: context, title: "Error", content: "Please enter all fields.");
+                  return;
+                }
+
+                if (memberLimit == null || memberLimit <= 0) {
+                  CustomAlert.show(context: context, title: "Error", content: "Please enter a valid member limit.");
+                  return;
+                }
+
+                if (_fromDate == null || _toDate == null) {
+                  CustomAlert.show(context: context, title: "Error", content: "Please select dates.");
+                  return;
+                }
+
+                // Перевірка на дату початку
+                if (_fromDate!.isBefore(DateTime.now())) {
+                  CustomAlert.show(context: context, title: "Error", content: "The start date cannot be in the past.");
+                  return;
+                }
+
+                // Перевірка на кінцеву дату
+                if (_toDate!.isBefore(_fromDate!)) {
+                  CustomAlert.show(context: context, title: "Error", content: "The end date must be later than the start date.");
+                  return;
+                }
+
+                // Якщо всі поля заповнені, можна створити поїздку
+                createTrip(country, _fromDate!, _toDate!, title, description, _image!, memberLimit);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF5C6D67),
+                padding: const EdgeInsets.symmetric(horizontal: 160, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-            ),
+              child: const Text(
+                'Create',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFFFFFFFF),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )
+
           ],
         ),
       ),
+    );
+  }
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
