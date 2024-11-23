@@ -40,7 +40,7 @@ Future<void> createTrip(
       'memberLimit': memberLimit,
       'creatorId': currentUser.uid, // ID користувача
       'createdAt': Timestamp.now(), // Дата створення
-      'status': false, // Статус подорожі
+      'status': true, // Статус подорожі
       'participants': [currentUser.uid], // Учасники подорожі
     };
 

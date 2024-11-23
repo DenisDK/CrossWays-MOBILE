@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
+import 'package:cross_ways/database/check_user_premium.dart';
 import 'package:cross_ways/database/create_trip.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -20,6 +23,21 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
 
   DateTime? _fromDate;
   DateTime? _toDate;
+  bool isPremiumUser = false;
+
+  @override
+  void initState() {
+    super.initState();
+    User? user = FirebaseAuth.instance.currentUser;
+    doesHasPremium(user!.uid);
+  }
+
+  Future<void> doesHasPremium(String userId) async {
+    bool hasPremium = await checkUserPremiumStatusById(userId);
+    setState(() {
+      isPremiumUser = hasPremium;
+    });
+  }
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -291,7 +309,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final country = _countryController.text;
                 final title = _titleController.text;
                 final description = _descriptionController.text;
@@ -325,8 +343,17 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                   return;
                 }
 
-                // Якщо всі поля заповнені, можна створити поїздку
-                createTrip(country, _fromDate!, _toDate!, title, description, _image!, memberLimit);
+                User? currentUser = FirebaseAuth.instance.currentUser;
+                DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('Users').doc(currentUser?.uid).get();
+                List activeTrips = userDoc['activeTravels'] ?? [];
+                int activeTripsCount = activeTrips.length;
+                if(!isPremiumUser && activeTripsCount >= 5){
+                  CustomAlert.show(context: context, title: "Error", content: "You can not have more then 5 active trips without premium status.");
+                  return;
+                }
+                else{
+                  createTrip(country, _fromDate!, _toDate!, title, description, _image!, memberLimit);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF5C6D67),
