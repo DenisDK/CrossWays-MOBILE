@@ -324,7 +324,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                       const SizedBox(height: 5),
                       FutureBuilder<List<Map<String, dynamic>>?>(
-                        // Відображення подорожей
                         future: _userTripsFuture,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -336,7 +335,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 child: Text('Error fetching trips'));
                           } else if (!snapshot.hasData ||
                               snapshot.data!.isEmpty) {
-                            return const Center(child: Text('No trips found'));
+                            return const Center(
+                                child: Text(
+                              'No trips found',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.brown,
+                              ),
+                            ));
                           } else {
                             final trips = snapshot.data!;
                             return ListView.builder(
@@ -356,16 +362,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 final tripDescription =
                                     trip['description'] ?? '';
                                 final tripImageUrl = trip['imageUrl'];
-                                Timestamp timestampFrom =
-                                    trip['from']; // Timestamp для "From"
-                                Timestamp timestampTo =
-                                    trip['to']; // Timestamp для "To"
-                                DateTime startDate = timestampFrom.toDate();
-                                DateTime endDate = timestampTo.toDate();
-                                String formattedStartDate =
-                                    "${startDate.day}-${startDate.month}-${startDate.year}";
-                                String formattedEndDate =
-                                    "${endDate.day}-${endDate.month}-${endDate.year}";
+
+                                String formattedStartDate = '';
+                                String formattedEndDate = '';
+
+                                try {
+                                  var fromDate = trip['from'];
+                                  var toDate = trip['to'];
+
+                                  if (fromDate is Timestamp) {
+                                    DateTime startDate = fromDate.toDate();
+                                    formattedStartDate =
+                                        "${startDate.day}-${startDate.month}-${startDate.year}";
+                                  } else if (fromDate is String) {
+                                    formattedStartDate = fromDate;
+                                  }
+
+                                  if (toDate is Timestamp) {
+                                    DateTime endDate = toDate.toDate();
+                                    formattedEndDate =
+                                        "${endDate.day}-${endDate.month}-${endDate.year}";
+                                  } else if (toDate is String) {
+                                    formattedEndDate = toDate;
+                                  }
+                                } catch (e) {
+                                  formattedStartDate = 'Date not available';
+                                  formattedEndDate = 'Date not available';
+                                }
+
                                 return Card(
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 10),
@@ -429,7 +453,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                               ),
                                               const SizedBox(height: 5),
                                               Text(
-                                                "$formattedStartDate - $formattedEndDate",
+                                                "$formattedStartDate / $formattedEndDate",
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.brown,
@@ -446,7 +470,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             );
                           }
                         },
-                      ),
+                      )
                     ],
                   ),
                 ),

@@ -1,7 +1,12 @@
+import 'package:cross_ways/components/alert_dialog_custom.dart';
+import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'edit_trip_view.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   final String tripName;
@@ -42,17 +47,14 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   Future<void> _fetchUserData() async {
     try {
-      // Отримуємо поточного користувача
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
 
-      // Отримуємо дані творця подорожі
       final creatorDoc = await FirebaseFirestore.instance
           .collection('Users')
           .doc(widget.creator)
           .get();
 
-      // Отримуємо дані поточного користувача
       final currentUserDoc = await FirebaseFirestore.instance
           .collection('Users')
           .doc(currentUser.uid)
@@ -69,6 +71,106 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         currentUserNickname = 'Error loading';
         isLoading = false;
       });
+    }
+  }
+
+  Future<void> _editTrip() async {
+    final result = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => EditTripDialog(
+        tripDescription: widget.tripDescription,
+        formattedStartDate: widget.formattedStartDate,
+        formattedEndDate: widget.formattedEndDate,
+        memberLimit: widget.memberLimit,
+      ),
+    );
+
+    if (result != null) {
+      try {
+        final tripQuery = await FirebaseFirestore.instance
+            .collection('Trips')
+            .where('title', isEqualTo: widget.tripName)
+            .where('creatorId', isEqualTo: widget.creator)
+            .get();
+
+        if (tripQuery.docs.isNotEmpty) {
+          final tripDoc = tripQuery.docs.first;
+          await tripDoc.reference.update({
+            'description': result['description'],
+            'from': result['from'],
+            'to': result['to'],
+            'memberLimit': result['memberLimit'],
+          });
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Trip updated successfully'),
+                backgroundColor: Color(0xFF8B6857),
+              ),
+            );
+
+            Navigator.pushReplacement(
+              context,
+              FadePageRoute(page: UserProfileScreen()),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Error updating trip'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _deleteTrip() async {
+    final bool? confirm = await CustomDialogAlert.showConfirmationDialog(
+      context,
+      'Delete Trip',
+      'Are you sure you want to delete this trip? This action cannot be undone.',
+    );
+
+    if (confirm == true) {
+      try {
+        final tripQuery = await FirebaseFirestore.instance
+            .collection('Trips')
+            .where('title', isEqualTo: widget.tripName)
+            .where('creatorId', isEqualTo: widget.creator)
+            .get();
+
+        if (tripQuery.docs.isNotEmpty) {
+          await tripQuery.docs.first.reference.delete();
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Trip deleted successfully'),
+                backgroundColor: Color(0xFF8B6857),
+              ),
+            );
+
+            Navigator.pushReplacement(
+              context,
+              FadePageRoute(page: UserProfileScreen()),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Error deleting trip'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -209,7 +311,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            width: 300, // Фіксована ширина для обох кнопок
+                            width: 300,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF8B6857),
@@ -221,7 +323,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 ),
                               ),
                               onPressed: () {
-                                // Add edit functionality
+                                _editTrip();
                               },
                               child: const Text(
                                 "Edit trip",
@@ -232,8 +334,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           ),
                           const SizedBox(height: 15),
                           SizedBox(
-                            width:
-                                300, // Така ж фіксована ширина як і для першої кнопки
+                            width: 300,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF5C6D67),
@@ -245,7 +346,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 ),
                               ),
                               onPressed: () {
-                                // Add delete functionality
+                                _deleteTrip();
                               },
                               child: const Text(
                                 "Delete this trip",
