@@ -20,12 +20,14 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   late Future<Map<String, dynamic>?> _userDataFuture;
+  late Future<List<Map<String, dynamic>>?> _userTripsFuture;
   bool isPremiumUser = false;
 
   @override
   void initState() {
     super.initState();
     _userDataFuture = _fetchUserData();
+    _userTripsFuture = _fetchUserTrips();
     doesHasPremium();
   }
 
@@ -47,6 +49,31 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     setState(() {
       isPremiumUser = hasPremium;
     });
+  }
+
+  Future<List<Map<String, dynamic>>?> _fetchUserTrips() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      final uid = currentUser.uid;
+      final userDoc =
+          await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+      if (userDoc.exists) {
+        List<dynamic> activeTripsIds = userDoc.data()!['activeTravels'] ?? [];
+        List<Map<String, dynamic>> trips = [];
+
+        for (var tripId in activeTripsIds) {
+          DocumentSnapshot tripDoc = await FirebaseFirestore.instance
+              .collection('Trips')
+              .doc(tripId)
+              .get();
+          if (tripDoc.exists) {
+            trips.add(tripDoc.data() as Map<String, dynamic>);
+          }
+        }
+        return trips;
+      }
+    }
+    return null;
   }
 
   @override
@@ -94,8 +121,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   title: const Text('VIP',
                       style: TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: (VipPurchaseScreen())));
+                    Navigator.push(context,
+                        PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
@@ -142,9 +169,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             final gender = userData['gender'] ?? 'Gender';
             final profileImageUrl = userData['profileImage'];
             final aboutMe = userData['aboutMe'] ?? '';
-            final travels = userData['travels'] as List<dynamic>? ?? [];
 
-            return Column(
+            return SingleChildScrollView(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -215,12 +243,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     ),
                                   ),
                                   isPremiumUser
-                                      ? Icon(
+                                      ? const Icon(
                                           Symbols.diamond_rounded,
                                           color: Colors.brown,
                                           size: 30,
                                         )
-                                      : SizedBox()
+                                      : const SizedBox()
                                 ],
                               ),
                               Text(
@@ -268,77 +296,145 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.3),
-                              blurRadius: 4,
-                              offset: const Offset(2, 2),
+                              blurRadius: 10,
+                              spreadRadius: 2,
                             ),
                           ],
                         ),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
-                            child: Text(
-                              aboutMe.isNotEmpty
-                                  ? aboutMe
-                                  : "You haven't added any information about yourself.",
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 135, 100, 71),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            aboutMe,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 135, 100, 71),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          const Text(
-                            'My trips',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 135, 100, 71),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            '(${travels.length})', // Display the number of trips
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 135, 100, 71),
-                            ),
-                          ),
-                        ],
+                      const Text(
+                        'My Trips',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 135, 100, 71),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 5),
-                      travels.isNotEmpty
-                          ? Column(
-                              children: travels.map((trip) {
-                                return ListTile(
-                                  title: Text(
-                                    trip.toString(),
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 135, 100, 71),
-                                    ),
+                      FutureBuilder<List<Map<String, dynamic>>?>(
+                        // Відображення подорожей
+                        future: _userTripsFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                                child: Text('Error fetching trips'));
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(child: Text('No trips found'));
+                          } else {
+                            final trips = snapshot.data!;
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: trips.length,
+                              itemBuilder: (context, index) {
+                                final trip = trips[index];
+                                final tripName =
+                                    trip['title'] ?? 'Unnamed trip';
+                                final tripDescription =
+                                    trip['description'] ?? '';
+                                final tripImageUrl = trip['imageUrl'];
+                                Timestamp timestampFrom =
+                                    trip['from']; // Timestamp для "From"
+                                Timestamp timestampTo =
+                                    trip['to']; // Timestamp для "To"
+                                DateTime startDate = timestampFrom.toDate();
+                                DateTime endDate = timestampTo.toDate();
+                                String formattedStartDate =
+                                    "${startDate.day}-${startDate.month}-${startDate.year}";
+                                String formattedEndDate =
+                                    "${endDate.day}-${endDate.month}-${endDate.year}";
+                                return Card(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        12), // Круглі кути
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      tripImageUrl != null
+                                          ? ClipRRect(
+                                              borderRadius: BorderRadius.circular(
+                                                  12), // Округлення зображення
+                                              child: Image.network(
+                                                tripImageUrl,
+                                                width: double.infinity,
+                                                height:
+                                                    200, // Висота зображення
+                                                fit: BoxFit.cover,
+                                              ),
+                                            )
+                                          : const Icon(Icons.image, size: 100),
+
+                                      // Текст під фото
+                                      Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              tripName,
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 135, 100, 71),
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              tripDescription,
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 135, 100, 71),
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              'From: $formattedStartDate To: $formattedEndDate',
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 135, 100, 71),
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 );
-                              }).toList(),
-                            )
-                          : const Center(
-                              child: Text(
-                                "You don't have any trips yet.",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 135, 100, 71),
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
+                              },
+                            );
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
               ],
-            );
+            ));
           },
         ),
       ),

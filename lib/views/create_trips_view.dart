@@ -42,7 +42,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
-    await picker.pickImage(source: ImageSource.gallery);
+        await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
@@ -51,8 +51,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
     }
   }
 
-  Future<void> _selectDate(
-      BuildContext context, bool isFromDate) async {
+  Future<void> _selectDate(BuildContext context, bool isFromDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -66,7 +65,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             colorScheme: const ColorScheme.light(
                 primary: Color.fromARGB(255, 135, 100, 71)),
             buttonTheme:
-            const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
         );
@@ -76,10 +75,12 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       setState(() {
         if (isFromDate) {
           _fromDate = picked;
-          _fromController.text = "${picked.day.toString().padLeft(2, '0')}.${picked.month.toString().padLeft(2, '0')}.${picked.year}";
+          _fromController.text =
+              "${picked.day.toString().padLeft(2, '0')}.${picked.month.toString().padLeft(2, '0')}.${picked.year}";
         } else {
           _toDate = picked;
-          _toController.text = "${picked.day.toString().padLeft(2, '0')}.${picked.month.toString().padLeft(2, '0')}.${picked.year}";
+          _toController.text =
+              "${picked.day.toString().padLeft(2, '0')}.${picked.month.toString().padLeft(2, '0')}.${picked.year}";
         }
       });
     }
@@ -118,47 +119,25 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             GestureDetector(
               onTap: _pickImage,
               child: Container(
-                height: 150,
+                height: 250,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(12),
                   image: _image != null
                       ? DecorationImage(
-                    image: FileImage(_image!),
-                    fit: BoxFit.cover,
-                  )
+                          image: FileImage(_image!),
+                          fit: BoxFit.cover,
+                        )
                       : null,
                 ),
                 child: _image == null
                     ? Center(
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: Colors.grey.shade600,
-                  ),
-                )
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors.grey.shade600,
+                        ),
+                      )
                     : null,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF5C6D67),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 172, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: const Text(
-                  'Save',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFFFFFFFF),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -317,47 +296,71 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
 
                 // Перевірка на заповненість основних полів
                 if (country.isEmpty || title.isEmpty || description.isEmpty) {
-                  CustomAlert.show(context: context, title: "Error", content: "Please enter all fields.");
+                  CustomAlert.show(
+                      context: context,
+                      title: "Error",
+                      content: "Please enter all fields.");
                   return;
                 }
 
                 if (memberLimit == null || memberLimit <= 0) {
-                  CustomAlert.show(context: context, title: "Error", content: "Please enter a valid member limit.");
+                  CustomAlert.show(
+                      context: context,
+                      title: "Error",
+                      content: "Please enter a valid member limit.");
                   return;
                 }
 
                 if (_fromDate == null || _toDate == null) {
-                  CustomAlert.show(context: context, title: "Error", content: "Please select dates.");
+                  CustomAlert.show(
+                      context: context,
+                      title: "Error",
+                      content: "Please select dates.");
                   return;
                 }
 
                 // Перевірка на дату початку
                 if (_fromDate!.isBefore(DateTime.now())) {
-                  CustomAlert.show(context: context, title: "Error", content: "The start date cannot be in the past.");
+                  CustomAlert.show(
+                      context: context,
+                      title: "Error",
+                      content: "The start date cannot be in the past.");
                   return;
                 }
 
                 // Перевірка на кінцеву дату
                 if (_toDate!.isBefore(_fromDate!)) {
-                  CustomAlert.show(context: context, title: "Error", content: "The end date must be later than the start date.");
+                  CustomAlert.show(
+                      context: context,
+                      title: "Error",
+                      content:
+                          "The end date must be later than the start date.");
                   return;
                 }
 
                 User? currentUser = FirebaseAuth.instance.currentUser;
-                DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('Users').doc(currentUser?.uid).get();
+                DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(currentUser?.uid)
+                    .get();
                 List activeTrips = userDoc['activeTravels'] ?? [];
                 int activeTripsCount = activeTrips.length;
-                if(!isPremiumUser && activeTripsCount >= 5){
-                  CustomAlert.show(context: context, title: "Error", content: "You can not have more then 5 active trips without premium status.");
+                if (!isPremiumUser && activeTripsCount >= 5) {
+                  CustomAlert.show(
+                      context: context,
+                      title: "Error",
+                      content:
+                          "You can not have more then 5 active trips without premium status.");
                   return;
-                }
-                else{
-                  createTrip(country, _fromDate!, _toDate!, title, description, _image!, memberLimit);
+                } else {
+                  createTrip(country, _fromDate!, _toDate!, title, description,
+                      _image!, memberLimit);
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF5C6D67),
-                padding: const EdgeInsets.symmetric(horizontal: 160, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 160, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -371,12 +374,12 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 ),
               ),
             )
-
           ],
         ),
       ),
     );
   }
+
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
