@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
+import 'package:cross_ways/views/trip_details_view.dart';
 import 'package:cross_ways/views/user_subscriptions_list_view.dart';
 import 'package:cross_ways/views/user_settings.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
@@ -346,6 +347,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 final trip = trips[index];
                                 final tripName =
                                     trip['title'] ?? 'Unnamed trip';
+                                final tripCountry =
+                                    trip['country'] ?? 'Unnamed country';
+                                final tripCreator =
+                                    trip['creatorId'] ?? 'Unnamed creator';
+                                final tripMembers =
+                                    trip['memberLimit'] ?? 'Unnamed members';
                                 final tripDescription =
                                     trip['description'] ?? '';
                                 final tripImageUrl = trip['imageUrl'];
@@ -364,65 +371,75 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       const EdgeInsets.symmetric(vertical: 10),
                                   elevation: 5,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        12), // Круглі кути
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      tripImageUrl != null
-                                          ? ClipRRect(
-                                              borderRadius: BorderRadius.circular(
-                                                  12), // Округлення зображення
-                                              child: Image.network(
-                                                tripImageUrl,
-                                                width: double.infinity,
-                                                height:
-                                                    200, // Висота зображення
-                                                fit: BoxFit.cover,
-                                              ),
-                                            )
-                                          : const Icon(Icons.image, size: 100),
-
-                                      // Текст під фото
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              tripName,
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 135, 100, 71),
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          PushPageRoute(
+                                              page: UserProfileScreen()));
+                                      Navigator.pushReplacement(
+                                          context,
+                                          PushPageRoute(
+                                            page: TripDetailsScreen(
+                                              tripName: tripName,
+                                              tripDescription: tripDescription,
+                                              tripImageUrl: tripImageUrl,
+                                              formattedStartDate:
+                                                  formattedStartDate,
+                                              formattedEndDate:
+                                                  formattedEndDate,
+                                              country: tripCountry,
+                                              creator: tripCreator,
+                                              memberLimit: tripMembers,
                                             ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              tripDescription,
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 135, 100, 71),
-                                                fontSize: 14,
+                                          ));
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        tripImageUrl != null
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child: Image.network(
+                                                  tripImageUrl,
+                                                  width: double.infinity,
+                                                  height: 200,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            : const Icon(Icons.image,
+                                                size: 100),
+                                        Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                tripName,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.brown,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Text(
-                                              'From: $formattedStartDate To: $formattedEndDate',
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 135, 100, 71),
-                                                fontSize: 14,
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                "$formattedStartDate - $formattedEndDate",
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.brown,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
