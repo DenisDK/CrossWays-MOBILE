@@ -155,9 +155,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               ),
             );
 
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               FadePageRoute(page: UserProfileScreen()),
+              (route) => false,
             );
           }
         }
@@ -356,6 +357,30 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                  ] else ...[
+                    Center(
+                      child: SizedBox(
+                        width: 300,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF8B6857),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: () {
+                            // Travel request functionality
+                          },
+                          child: const Text(
+                            "Travel Request",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
                       ),
                     ),
                   ],

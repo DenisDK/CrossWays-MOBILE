@@ -2,10 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
 import 'package:cross_ways/database/check_user_premium.dart';
 import 'package:cross_ways/database/create_trip.dart';
+import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import '../components/animation_route.dart';
 
 class CreateTripScreen extends StatefulWidget {
   @override
@@ -353,8 +356,10 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                           "You can not have more then 5 active trips without premium status.");
                   return;
                 } else {
-                  createTrip(country, _fromDate!, _toDate!, title, description,
-                      _image!, memberLimit);
+                  await createTrip(country, _fromDate!, _toDate!, title,
+                      description, _image!, memberLimit);
+                  Navigator.pushReplacement(
+                      context, PushPageRoute(page: UserProfileScreen()));
                 }
               },
               style: ElevatedButton.styleFrom(
