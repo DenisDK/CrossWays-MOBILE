@@ -147,6 +147,14 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         if (tripQuery.docs.isNotEmpty) {
           await tripQuery.docs.first.reference.delete();
 
+          final userDoc = FirebaseFirestore.instance
+              .collection('Users')
+              .doc(widget.creator);
+
+          await userDoc.update({
+            'activeTravels': FieldValue.arrayRemove([tripQuery.docs.first.id]),
+          });
+
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
