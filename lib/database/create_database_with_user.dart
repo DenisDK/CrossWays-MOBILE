@@ -55,7 +55,7 @@ Future<void> addUser(String nickname, String name, String gender, DateTime birth
     // Створюємо підколекції
     await Future.wait([
       users.doc(uid).collection('FeedbackComment').add({}),
-      users.doc(uid).collection('FeedbackStars').add({})
+      users.doc(uid).collection('FeedbackStars').add({}),
     ]);
   } catch (error) {
     print("Не вдалося додати користувача: $error");

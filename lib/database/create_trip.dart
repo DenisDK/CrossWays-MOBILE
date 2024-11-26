@@ -42,6 +42,7 @@ Future<void> createTrip(
       'createdAt': Timestamp.now(), // Дата створення
       'status': true, // Статус подорожі
       'participants': [currentUser.uid], // Учасники подорожі
+      'requests': [] //Для запросів на участь
     };
 
     // Створити новий документ у колекції Trips

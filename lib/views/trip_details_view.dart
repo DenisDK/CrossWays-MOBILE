@@ -1,11 +1,12 @@
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/components/custom_error_alert.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import '../database/like_trip.dart';
 import 'edit_trip_view.dart';
 
 class TripDetailsScreen extends StatefulWidget {
@@ -38,11 +39,14 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   String? creatorNickname;
   String? currentUserNickname;
   bool isLoading = true;
+  String? tripId;
+  List<Map<String, String>> requests = [];
 
   @override
   void initState() {
     super.initState();
     _fetchUserData();
+    _fetchRequests();
   }
 
   Future<void> _fetchUserData() async {
@@ -73,6 +77,45 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       });
     }
   }
+
+  Future<void> _fetchRequests() async {
+    try {
+      final tripQuery = await FirebaseFirestore.instance
+          .collection('Trips')
+          .where('title', isEqualTo: widget.tripName)
+          .where('creatorId', isEqualTo: widget.creator)
+          .get();
+
+      if (tripQuery.docs.isNotEmpty) {
+        final tripDoc = tripQuery.docs.first;
+        tripId = tripDoc.id;
+
+        List<dynamic> requestIds = tripDoc.data()['requests'] ?? [];
+
+        // Завантаження запитів
+        for (String userId in requestIds) {
+          final userDoc = await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(userId)
+              .get();
+
+          if (userDoc.exists) {
+            final userData = userDoc.data();
+            requests.add({
+              'id': userId,
+              'nickname': userData?['nickname'] ?? 'Unknown',
+              'name': userData?['name'] ?? 'Unknown',
+            });
+          }
+        }
+
+        setState(() {}); // Оновлення інтерфейсу
+      }
+    } catch (e) {
+      print("Error fetching requests: $e");
+    }
+  }
+
 
   Future<void> _editTrip() async {
     final result = await showDialog<Map<String, dynamic>>(
@@ -315,6 +358,69 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: 25),
+                  if (isCreator && requests.isNotEmpty) ...[
+                    const Text(
+                      "Requests",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF8B6857),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: requests.length,
+                      itemBuilder: (context, index) {
+                        final request = requests[index];
+                        return Card(
+                          color: const Color.fromARGB(255, 250, 227, 223),
+                          elevation: 3,
+                          child: ListTile(
+                            title: Text(request['name']!,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF8B6857),
+                              ),
+                            ),
+                            subtitle: Text("Nickname: ${request['nickname']}",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF8B6857),
+                              ),
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.check, color: Colors.green),
+                                  onPressed: () async {
+                                    await _handleRequest(request['id']!, true);
+                                    setState(() {
+                                      requests.removeAt(index); // Видаляємо запит із списку
+                                    });
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.close, color: Colors.red),
+                                  onPressed: () async {
+                                    await _handleRequest(request['id']!, false);
+                                    setState(() {
+                                      requests.removeAt(index); // Видаляємо запит із списку
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                  SizedBox(height: 25),
                   if (isCreator) ...[
                     Center(
                       child: Column(
@@ -382,7 +488,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                             ),
                           ),
                           onPressed: () {
-                            // Travel request functionality
+                            final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                            addUserToTripRequests(tripId!, currentUserId!);
                           },
                           child: const Text(
                             "Travel Request",
@@ -399,6 +506,60 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleRequest(String userId, bool isAccepted) async {
+    try {
+      final tripQuery = await FirebaseFirestore.instance
+          .collection('Trips')
+          .where('title', isEqualTo: widget.tripName)
+          .where('creatorId', isEqualTo: widget.creator)
+          .get();
+
+      if (tripQuery.docs.isNotEmpty) {
+        final tripDoc = tripQuery.docs.first;
+        final tripData = tripDoc.data();
+        List<dynamic> currentMembers = tripData['participants'] ?? [];
+        final int memberLimit = tripData['memberLimit'];
+        if(currentMembers.length >= memberLimit){
+          CustomAlert.show(context: context, title: "Much members", content: "This trip can not have more than ${memberLimit} members");
+          return;
+        }
+        if (isAccepted) {
+          await tripDoc.reference.update({
+            'participants': FieldValue.arrayUnion([userId]),
+          });
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(userId)
+              .update({
+            'activeTravels': FieldValue.arrayUnion([tripId!]),
+          });
+        }
+        await tripDoc.reference.update({
+          'requests': FieldValue.arrayRemove([userId]),
+        });
+
+        setState(() {
+          requests.remove(userId);
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                isAccepted ? 'User accepted to the trip' : 'User request declined'),
+            backgroundColor: Colors.brown[300],
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error processing request'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 

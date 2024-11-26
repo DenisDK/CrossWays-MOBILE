@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../database/like_trip.dart';
 import 'trip_details_view.dart';
 
 class JoinTripScreen extends StatefulWidget {
@@ -26,20 +27,32 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
       final currentUserId = _auth.currentUser?.uid;
       if (currentUserId == null) return;
 
+      // Отримуємо всі подорожі, де поточний користувач не є творцем і не подав запит
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Trips')
           .where('creatorId', isNotEqualTo: currentUserId)
           .get();
 
       setState(() {
+        // Фільтруємо подорожі, до яких користувач ще не подав запит і не є учасником
         _trips = querySnapshot.docs
-            .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
-            .toList();
+            .map((doc) => {
+          'id': doc.id,
+          ...doc.data() as Map<String, dynamic>
+        })
+            .where((trip) {
+          final requests = List.from(trip['requests'] ?? []);
+          final participants = List.from(trip['participants'] ?? []);
+
+          // Якщо користувач ще не подав запит і не є учасником
+          return !requests.contains(currentUserId) && !participants.contains(currentUserId);
+        }).toList();
       });
     } catch (e) {
       log('Error fetching trips: $e');
     }
   }
+
 
   String formatDate(DateTime? date) {
     if (date == null) return 'Unknown';
@@ -161,15 +174,34 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.red, size: 40),
                   onPressed: () {
-                    // Логіка для крестику
+                    setState(() {
+                      if (_trips.isNotEmpty) {
+                        _trips.removeAt(_controller.page!.toInt());
+                        if (_trips.isEmpty) {
+                          _controller.jumpToPage(0);
+                        }
+                      }
+                    });
                   },
                 ),
                 const SizedBox(width: 20),
                 IconButton(
-                  icon:
-                      const Icon(Icons.favorite, color: Colors.pink, size: 40),
+                  icon: const Icon(Icons.favorite, color: Colors.pink, size: 40),
                   onPressed: () {
-                    // Логіка для сердечка
+                    final currentUserId = _auth.currentUser?.uid;
+                    if (currentUserId != null) {
+                      final tripId = trip['id'];
+                      addUserToTripRequests(tripId, currentUserId);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Request sent successfully!')),
+                      );
+                      setState(() {
+                        _trips.removeAt(_controller.page!.toInt());
+                        if (_trips.isEmpty) {
+                          _controller.jumpToPage(0);
+                        }
+                      });
+                    }
                   },
                 ),
               ],
