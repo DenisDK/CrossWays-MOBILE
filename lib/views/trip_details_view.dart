@@ -1,6 +1,7 @@
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
+import 'package:cross_ways/views/subscriber_profile_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -415,6 +416,15 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                                 ),
                               ],
                             ),
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      SubscriberProfileScreen(uid: request['id']!),
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
