@@ -1,6 +1,7 @@
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/user_subscriptions_list_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
@@ -52,16 +53,18 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 ListTile(
-                  title: const Text('My profile',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).myProfile,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('Main menu',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).mainMenu,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -70,32 +73,36 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Subscriptions',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).subscriptions,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('VIP',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).vip,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: (VipPurchaseScreen())));
+                    Navigator.push(context,
+                        PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
-                  title: const Text('Settings',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).settings,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('About us',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).aboutUs,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -105,8 +112,8 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                 ),
                 const SizedBox(height: 25),
                 ListTile(
-                  title: const Text('Sign Out',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
+                  title: Text(S.of(context).signOut,
+                      style: const TextStyle(color: Colors.red, fontSize: 18)),
                   onTap: () {
                     _handleSignOut(context);
                   },
@@ -164,16 +171,18 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
               padding: const EdgeInsets.only(top: 20),
               child: Column(
                 children: [
-                  const Text(
-                    'Avaliable plans',
+                  Text(
+                    S.of(context).avaliablePlans,
                     style: TextStyle(
                       color: Color.fromARGB(255, 135, 100, 71),
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
-                    'There are several plans for using CrossWays. Please choose the one that suit for trips easily',
+                  Text(
+                    S
+                        .of(context)
+                        .thereAreSeveralPlansForUsingCrosswaysPleaseChooseThe,
                     style: TextStyle(
                       color: Color.fromARGB(255, 135, 100, 71),
                       fontSize: 15,
@@ -196,8 +205,8 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(height: 10),
-                        const Text(
-                          'Regular',
+                        Text(
+                          S.of(context).regular,
                           style: TextStyle(
                             color: Color.fromARGB(255, 135, 100, 71),
                             fontSize: 35,
@@ -205,8 +214,10 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const Text(
-                          'Use standard features to plan and search for trips easily',
+                        Text(
+                          S
+                              .of(context)
+                              .useStandardFeaturesToPlanAndSearchForTripsEasily,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color.fromARGB(255, 135, 100, 71),
@@ -215,15 +226,15 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        regularRow('Subscribe only 10 people'),
+                        regularRow(S.of(context).subscribeOnly10People),
                         const SizedBox(
                           height: 15,
                         ),
-                        regularRow('Have only 10 active trips'),
+                        regularRow(S.of(context).haveOnly10ActiveTrips),
                         const SizedBox(
                           height: 15,
                         ),
-                        regularRow('Add photo to your profile picture'),
+                        regularRow(S.of(context).addPhotoToYourProfilePicture),
                         const SizedBox(
                           height: 50,
                         ),
@@ -243,9 +254,9 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                               ),
                             ],
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              'You have this plan',
+                              S.of(context).youHaveThisPlan,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
@@ -274,8 +285,8 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(height: 10),
-                        const Text(
-                          'Advanced',
+                        Text(
+                          S.of(context).advanced,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 35,
@@ -283,8 +294,10 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const Text(
-                          'Use advanced functionallity for a better user experience',
+                        Text(
+                          S
+                              .of(context)
+                              .useAdvancedFunctionallityForABetterUserExperience,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -293,19 +306,21 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        advancedRow('Subscribe unlimited number of people'),
+                        advancedRow(
+                            S.of(context).subscribeUnlimitedNumberOfPeople),
                         const SizedBox(
                           height: 15,
                         ),
-                        advancedRow('Have unlimited number of active trips'),
+                        advancedRow(
+                            S.of(context).haveUnlimitedNumberOfActiveTrips),
                         const SizedBox(
                           height: 15,
                         ),
-                        advancedRow('Add gif to your profile picture'),
+                        advancedRow(S.of(context).addGifToYourProfilePicture),
                         const SizedBox(
                           height: 15,
                         ),
-                        advancedRow('Make your account private'),
+                        advancedRow(S.of(context).makeYourAccountPrivate),
                         const SizedBox(
                           height: 50,
                         ),
@@ -326,9 +341,9 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                                     ),
                                   ],
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
-                                    'You have this plan',
+                                    S.of(context).youHaveThisPlan,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 92, 109, 103),
@@ -342,9 +357,9 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
                                 paymentConfiguration:
                                     PaymentConfiguration.fromJsonString(
                                         defaultGooglePay),
-                                paymentItems: const [
+                                paymentItems: [
                                   PaymentItem(
-                                    label: 'VIP Status',
+                                    label: S.of(context).vipStatus,
                                     amount: '100',
                                     status: PaymentItemStatus.final_price,
                                   ),
@@ -382,7 +397,9 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(width: 45,),
+        SizedBox(
+          width: 45,
+        ),
         const Icon(
           Icons.check,
           size: 30,
@@ -405,15 +422,15 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
     );
   }
 
-
-
   // Для зменшення коду (Покращена карточка)
   advancedRow(String textToShow) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(width: 45,),
+        SizedBox(
+          width: 45,
+        ),
         const Icon(
           Icons.star,
           size: 30,
@@ -439,8 +456,8 @@ class _VipPurchaseScreenState extends State<VipPurchaseScreen> {
   void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,
-      'Вихід з аккаунту',
-      'Ви впевнені, що хочете вийти з аккаунту?',
+      S.of(context).logOutOfAccount,
+      S.of(context).areYouSureYouWantToLogOut,
     );
     if (result != null && result) {
       bool isUserSignOut = await signOut();

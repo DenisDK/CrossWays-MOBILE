@@ -1,3 +1,4 @@
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class CustomDialogAlert {
@@ -34,8 +35,8 @@ class CustomDialogAlert {
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: const Text(
-                'No',
+              child: Text(
+                S.of(context).no,
                 style: TextStyle(
                   color: Color.fromARGB(255, 135, 100, 71),
                   fontSize: 16,
@@ -46,8 +47,8 @@ class CustomDialogAlert {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: const Text(
-                'Yes',
+              child: Text(
+                S.of(context).yes,
                 style: TextStyle(
                   color: Color.fromARGB(255, 135, 100, 71),
                   fontSize: 16,

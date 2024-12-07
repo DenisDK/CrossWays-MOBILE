@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
 import 'package:cross_ways/database/check_user_premium.dart';
 import 'package:cross_ways/database/create_trip.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -98,10 +99,10 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            const Row(
+            Row(
               children: [
                 Text(
-                  'Create a Trip',
+                  S.of(context).createATrip,
                   style: TextStyle(
                       color: Colors.brown,
                       fontWeight: FontWeight.bold,
@@ -110,8 +111,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Upload Image',
+            Text(
+              S.of(context).uploadImage,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -144,8 +145,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Country :',
+            Text(
+              S.of(context).country,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -167,8 +168,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Select period',
+            Text(
+              S.of(context).selectPeriod,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -183,7 +184,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                     controller: _fromController,
                     readOnly: true,
                     decoration: InputDecoration(
-                      hintText: 'From',
+                      hintText: S.of(context).from,
                       filled: true,
                       fillColor: Colors.grey.shade200,
                       border: OutlineInputBorder(
@@ -203,7 +204,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                     controller: _toController,
                     readOnly: true,
                     decoration: InputDecoration(
-                      hintText: 'To',
+                      hintText: S.of(context).to,
                       filled: true,
                       fillColor: Colors.grey.shade200,
                       border: OutlineInputBorder(
@@ -220,8 +221,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Title :',
+            Text(
+              S.of(context).title,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -243,8 +244,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Description :',
+            Text(
+              S.of(context).description,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -267,8 +268,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Member limit :',
+            Text(
+              S.of(context).memberLimit,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -301,24 +302,24 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 if (country.isEmpty || title.isEmpty || description.isEmpty) {
                   CustomAlert.show(
                       context: context,
-                      title: "Error",
-                      content: "Please enter all fields.");
+                      title: S.of(context).error,
+                      content: S.of(context).pleaseEnterAllFields);
                   return;
                 }
 
                 if (memberLimit == null || memberLimit <= 0) {
                   CustomAlert.show(
                       context: context,
-                      title: "Error",
-                      content: "Please enter a valid member limit.");
+                      title: S.of(context).error,
+                      content: S.of(context).pleaseEnterAValidMemberLimit);
                   return;
                 }
 
                 if (_fromDate == null || _toDate == null) {
                   CustomAlert.show(
                       context: context,
-                      title: "Error",
-                      content: "Please select dates.");
+                      title: S.of(context).error,
+                      content: S.of(context).pleaseSelectDates);
                   return;
                 }
 
@@ -326,8 +327,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 if (_fromDate!.isBefore(DateTime.now())) {
                   CustomAlert.show(
                       context: context,
-                      title: "Error",
-                      content: "The start date cannot be in the past.");
+                      title: S.of(context).error,
+                      content: S.of(context).theStartDateCannotBeInThePast);
                   return;
                 }
 
@@ -335,9 +336,9 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 if (_toDate!.isBefore(_fromDate!)) {
                   CustomAlert.show(
                       context: context,
-                      title: "Error",
+                      title: S.of(context).error,
                       content:
-                          "The end date must be later than the start date.");
+                          S.of(context).theEndDateMustBeLaterThanTheStartDate);
                   return;
                 }
 
@@ -351,9 +352,10 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 if (!isPremiumUser && activeTripsCount >= 5) {
                   CustomAlert.show(
                       context: context,
-                      title: "Error",
-                      content:
-                          "You can not have more then 5 active trips without premium status.");
+                      title: S.of(context).error,
+                      content: S
+                          .of(context)
+                          .youCanNotHaveMoreThen5ActiveTripsWithout);
                   return;
                 } else {
                   await createTrip(country, _fromDate!, _toDate!, title,
@@ -365,13 +367,13 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF5C6D67),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 160, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 153, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: const Text(
-                'Create',
+              child: Text(
+                S.of(context).create,
                 style: TextStyle(
                   fontSize: 16,
                   color: Color(0xFFFFFFFF),
@@ -390,7 +392,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Error'),
+          title: Text(S.of(context).error),
           content: Text(message),
           actions: [
             TextButton(

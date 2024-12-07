@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:cross_ways/views/trip_details_view.dart';
 import 'package:cross_ways/views/user_subscriptions_list_view.dart';
@@ -93,16 +94,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 ListTile(
-                  title: const Text('My profile',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).myProfile,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('Main menu',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).mainMenu,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -111,32 +114,36 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Subscriptions',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).subscriptions,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('VIP',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).vip,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
-                  title: const Text('Settings',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).settings,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('About us',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).aboutUs,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -146,8 +153,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
                 const SizedBox(height: 25),
                 ListTile(
-                  title: const Text('Sign Out',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
+                  title: Text(S.of(context).signOut,
+                      style: const TextStyle(color: Colors.red, fontSize: 18)),
                   onTap: () {
                     _handleSignOut(context);
                   },
@@ -280,8 +287,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        'About me',
+                      Text(
+                        S.of(context).aboutMe,
                         style: TextStyle(
                           color: Color.fromARGB(255, 135, 100, 71),
                           fontSize: 20,
@@ -314,8 +321,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        'My Trips',
+                      Text(
+                        S.of(context).myTrips,
                         style: TextStyle(
                           color: Color.fromARGB(255, 135, 100, 71),
                           fontSize: 20,
@@ -331,13 +338,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             return const Center(
                                 child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
-                            return const Center(
-                                child: Text('Error fetching trips'));
+                            return Center(
+                                child: Text(S.of(context).errorFetchingTrips));
                           } else if (!snapshot.hasData ||
                               snapshot.data!.isEmpty) {
-                            return const Center(
+                            return Center(
                                 child: Text(
-                              'No trips found',
+                              S.of(context).noTripsFound,
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.brown,
@@ -352,13 +359,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               itemBuilder: (context, index) {
                                 final trip = trips[index];
                                 final tripName =
-                                    trip['title'] ?? 'Unnamed trip';
-                                final tripCountry =
-                                    trip['country'] ?? 'Unnamed country';
-                                final tripCreator =
-                                    trip['creatorId'] ?? 'Unnamed creator';
-                                final tripMembers =
-                                    trip['memberLimit'] ?? 'Unnamed members';
+                                    trip['title'] ?? S.of(context).unnamedTrip;
+                                final tripCountry = trip['country'] ??
+                                    S.of(context).unnamedCountry;
+                                final tripCreator = trip['creatorId'] ??
+                                    S.of(context).unnamedCreator;
+                                final tripMembers = trip['memberLimit'] ??
+                                    S.of(context).unnamedMembers;
                                 final tripDescription =
                                     trip['description'] ?? '';
                                 final tripImageUrl = trip['imageUrl'];
@@ -386,8 +393,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     formattedEndDate = toDate;
                                   }
                                 } catch (e) {
-                                  formattedStartDate = 'Date not available';
-                                  formattedEndDate = 'Date not available';
+                                  formattedStartDate =
+                                      S.of(context).dateNotAvailable;
+                                  formattedEndDate =
+                                      S.of(context).dateNotAvailable;
                                 }
 
                                 return Card(
@@ -485,8 +494,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,
-      'Вихід з аккаунту',
-      'Ви впевнені, що хочете вийти з аккаунту?',
+      S.of(context).logOutOfAccount,
+      S.of(context).areYouSureYouWantToLogOut,
     );
     if (result != null && result) {
       bool isUserSignOut = await signOut();

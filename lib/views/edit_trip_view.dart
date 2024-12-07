@@ -1,3 +1,4 @@
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -56,9 +57,9 @@ class _EditTripDialogState extends State<EditTripDialog> {
   void _validateMemberLimit(String value) {
     setState(() {
       if (value.isEmpty) {
-        memberLimitError = 'Member limit is required';
+        memberLimitError = S.of(context).memberLimitIsRequired;
       } else if (!_isValidMemberLimit(value)) {
-        memberLimitError = 'Minimum 1 member required';
+        memberLimitError = S.of(context).minimum1MemberRequired;
       } else {
         memberLimitError = null;
       }
@@ -68,7 +69,7 @@ class _EditTripDialogState extends State<EditTripDialog> {
   void _validateDescription(String value) {
     setState(() {
       if (value.trim().isEmpty) {
-        descriptionError = 'Description is required';
+        descriptionError = S.of(context).descriptionIsRequired;
       } else {
         descriptionError = null;
       }
@@ -112,8 +113,8 @@ class _EditTripDialogState extends State<EditTripDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Edit Trip',
+            Text(
+              S.of(context).editTrip,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -126,7 +127,7 @@ class _EditTripDialogState extends State<EditTripDialog> {
               maxLines: 13,
               onChanged: _validateDescription,
               decoration: InputDecoration(
-                labelText: 'Description',
+                labelText: S.of(context).description,
                 labelStyle: const TextStyle(
                   color: Color(0xFF8B6857),
                 ),
@@ -159,7 +160,7 @@ class _EditTripDialogState extends State<EditTripDialog> {
                   child: TextButton(
                     onPressed: () => _selectDate(context, true),
                     child: Text(
-                      'Start Date: ${DateFormat('dd-MM-yyyy').format(startDate!)}',
+                      S.of(context).startDateDateformatddmmyyyyformatstartdate,
                       style: const TextStyle(color: Color(0xFF8B6857)),
                     ),
                   ),
@@ -169,7 +170,7 @@ class _EditTripDialogState extends State<EditTripDialog> {
                   child: TextButton(
                     onPressed: () => _selectDate(context, false),
                     child: Text(
-                      'End Date: ${DateFormat('dd-MM-yyyy').format(endDate!)}',
+                      S.of(context).endDateDateformatddmmyyyyformatenddate,
                       style: const TextStyle(color: Color(0xFF8B6857)),
                     ),
                   ),
@@ -185,7 +186,7 @@ class _EditTripDialogState extends State<EditTripDialog> {
               ],
               onChanged: _validateMemberLimit,
               decoration: InputDecoration(
-                labelText: 'Member Limit',
+                labelText: S.of(context).memberLimit,
                 labelStyle: const TextStyle(
                   color: Color(0xFF8B6857),
                 ),
@@ -217,8 +218,8 @@ class _EditTripDialogState extends State<EditTripDialog> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Cancel',
+                  child: Text(
+                    S.of(context).cancel,
                     style: TextStyle(color: Color(0xFF8B6857)),
                   ),
                 ),
@@ -242,14 +243,18 @@ class _EditTripDialogState extends State<EditTripDialog> {
                     }
 
                     Navigator.pop(context, {
-                      'description': descriptionController.text.trim(),
-                      'from': DateFormat('dd-MM-yyyy').format(startDate!),
-                      'to': DateFormat('dd-MM-yyyy').format(endDate!),
-                      'memberLimit': int.parse(memberLimitController.text),
+                      S.of(context).description:
+                          descriptionController.text.trim(),
+                      S.of(context).from:
+                          DateFormat('dd-MM-yyyy').format(startDate!),
+                      S.of(context).to:
+                          DateFormat('dd-MM-yyyy').format(endDate!),
+                      S.of(context).memberlimit:
+                          int.parse(memberLimitController.text),
                     });
                   },
-                  child: const Text(
-                    'Save',
+                  child: Text(
+                    S.of(context).save,
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

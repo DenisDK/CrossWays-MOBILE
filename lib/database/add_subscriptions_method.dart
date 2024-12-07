@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
@@ -11,8 +12,8 @@ Future<void> addSubscription(String subscriberId, BuildContext context) async {
 
   bool? result = await CustomDialogAlert.showConfirmationDialog(
     context,
-    'Subscribe?',
-    'Are you sure you want to add this user to your subscriptions?',
+    S.of(context).subscribe,
+    S.of(context).areYouSureYouWantToAddThisUserTo,
   );
 
   if (result != null && result) {
@@ -27,8 +28,8 @@ Future<void> addSubscription(String subscriberId, BuildContext context) async {
       if (currentUserTravelCompanions.contains(subscriberId)) {
         CustomAlert.show(
           context: context,
-          title: 'Already subscribed',
-          content: 'You are already subscribed to this user.',
+          title: S.of(context).alreadySubscribed,
+          content: S.of(context).youAreAlreadySubscribedToThisUser,
           buttonText: 'OK',
         );
         return;
@@ -37,9 +38,8 @@ Future<void> addSubscription(String subscriberId, BuildContext context) async {
       if (!isPremium && currentUserTravelCompanions.length >= 10) {
         CustomAlert.show(
           context: context,
-          title: 'Limit reached',
-          content:
-              'You can only have up to 10 subscriptions. Upgrade to premium to add more.',
+          title: S.of(context).limitReached,
+          content: S.of(context).youCanOnlyHaveUpTo10SubscriptionsUpgradeTo,
           buttonText: 'OK',
         );
         return;
@@ -52,15 +52,15 @@ Future<void> addSubscription(String subscriberId, BuildContext context) async {
 
       CustomAlert.show(
         context: context,
-        title: 'Success',
-        content: 'You have successfully subscribed!',
+        title: S.of(context).success,
+        content: S.of(context).youHaveSuccessfullySubscribed,
         buttonText: 'OK',
       );
     } catch (e) {
       CustomAlert.show(
         context: context,
-        title: 'Error',
-        content: 'An error occurred while adding the subscription: $e',
+        title: S.of(context).error,
+        content: S.of(context).anErrorOccurredWhileAddingTheSubscriptionE,
         buttonText: 'OK',
       );
     }

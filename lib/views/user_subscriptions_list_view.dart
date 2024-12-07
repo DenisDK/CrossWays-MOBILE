@@ -2,6 +2,7 @@ import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/about_as_view.dart';
 import 'package:cross_ways/views/subscriber_profile_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
@@ -34,7 +35,7 @@ class _UserSubscriptionsListScreenState
   @override
   Widget build(BuildContext context) {
     if (currentUser == null) {
-      return const Center(child: Text('User not authenticated'));
+      return Center(child: Text(S.of(context).userNotAuthenticated));
     }
 
     return Scaffold(
@@ -51,16 +52,18 @@ class _UserSubscriptionsListScreenState
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 ListTile(
-                  title: const Text('My profile',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).myProfile,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('Main menu',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).mainMenu,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -69,32 +72,36 @@ class _UserSubscriptionsListScreenState
                   },
                 ),
                 ListTile(
-                  title: const Text('Subscriptions',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).subscriptions,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('VIP',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).vip,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
-                  title: const Text('Settings',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).settings,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('About us',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).aboutUs,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -104,8 +111,8 @@ class _UserSubscriptionsListScreenState
                 ),
                 const SizedBox(height: 25),
                 ListTile(
-                  title: const Text('Sign Out',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
+                  title: Text(S.of(context).signOut,
+                      style: const TextStyle(color: Colors.red, fontSize: 18)),
                   onTap: () {
                     _handleSignOut(context);
                   },
@@ -179,8 +186,8 @@ class _UserSubscriptionsListScreenState
                     userData['travelCompanions'] ?? [];
 
                 if (subscriptionsList.isEmpty) {
-                  return const Center(
-                      child: Text('Ops... You don\'t have subscriptions now.',
+                  return Center(
+                      child: Text(S.of(context).opsYouDontHaveSubscriptionsNow,
                           style: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                               fontSize: 20)));
@@ -188,11 +195,11 @@ class _UserSubscriptionsListScreenState
 
                 return ListView(
                   children: [
-                    const Padding(
+                    Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 10.0, horizontal: 22),
                       child: Text(
-                        'Subscriptions:',
+                        S.of(context).subscriptions,
                         style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -215,12 +222,15 @@ class _UserSubscriptionsListScreenState
                                   subscriptionsSnapshot) {
                             if (subscriptionsSnapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const ListTile(title: Text('Loading...'));
+                              return ListTile(
+                                  title: Text(S.of(context).loading));
                             }
 
                             if (subscriptionsSnapshot.hasError) {
-                              return const ListTile(
-                                  title: Text('Error loading subscriber data'));
+                              return ListTile(
+                                  title: Text(S
+                                      .of(context)
+                                      .errorLoadingSubscriberData));
                             }
 
                             if (!subscriptionsSnapshot.hasData ||
@@ -232,15 +242,17 @@ class _UserSubscriptionsListScreenState
                                 'travelCompanions':
                                     FieldValue.arrayRemove([subscriberId]),
                               });
-                              return const ListTile(
-                                  title: Text('Subscriptions not found'));
+                              return ListTile(
+                                  title: Text(
+                                      S.of(context).subscriptionsNotFound));
                             }
 
                             final subscribeData = subscriptionsSnapshot.data!
                                 .data() as Map<String, dynamic>;
-                            final nickname =
-                                subscribeData['nickname'] ?? 'Unknown';
-                            final gender = subscribeData['gender'] ?? 'Unknown';
+                            final nickname = subscribeData['nickname'] ??
+                                S.of(context).unknown;
+                            final gender = subscribeData['gender'] ??
+                                S.of(context).unknown;
                             final profileImage =
                                 subscribeData['profileImage'] ?? '';
 
@@ -290,8 +302,8 @@ class _UserSubscriptionsListScreenState
   Future<void> _removeSubscriber(String subscriptionsId) async {
     bool? isConfirmed = await CustomDialogAlert.showConfirmationDialog(
       context,
-      'Are you sure?',
-      'Do you want to delete this subscriptions from your list?',
+      S.of(context).areYouSure,
+      S.of(context).doYouWantToDeleteThisSubscriptionsFromYourList,
     );
 
     if (isConfirmed == true) {
@@ -305,15 +317,15 @@ class _UserSubscriptionsListScreenState
 
         CustomAlert.show(
           context: context,
-          title: 'Success',
-          content: 'Subscriptions removed successfully!',
+          title: S.of(context).success,
+          content: S.of(context).subscriptionsRemovedSuccessfully,
           buttonText: 'OK',
         );
       } catch (e) {
         CustomAlert.show(
           context: context,
-          title: 'Error',
-          content: 'Error removing subscriptions: $e',
+          title: S.of(context).error,
+          content: S.of(context).errorRemovingSubscriptionsE,
           buttonText: 'OK',
         );
       }
@@ -323,8 +335,8 @@ class _UserSubscriptionsListScreenState
   void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,
-      'Вихід з аккаунту',
-      'Ви впевнені, що хочете вийти з аккаунту?',
+      S.of(context).logOutOfAccount,
+      S.of(context).areYouSureYouWantToLogOut,
     );
     if (result != null && result) {
       bool isUserSignOut = await signOut();

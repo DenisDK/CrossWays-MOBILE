@@ -1,6 +1,7 @@
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
 import 'package:cross_ways/components/custom_error_alert.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/subscriber_profile_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
 import 'package:flutter/material.dart';
@@ -66,14 +67,16 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
           .get();
 
       setState(() {
-        creatorNickname = creatorDoc.data()?['nickname'] ?? 'Unknown';
-        currentUserNickname = currentUserDoc.data()?['nickname'] ?? 'Unknown';
+        creatorNickname =
+            creatorDoc.data()?['nickname'] ?? S.of(context).unknown;
+        currentUserNickname =
+            currentUserDoc.data()?['nickname'] ?? S.of(context).unknown;
         isLoading = false;
       });
     } catch (e) {
       setState(() {
-        creatorNickname = 'Error loading';
-        currentUserNickname = 'Error loading';
+        creatorNickname = S.of(context).errorLoading;
+        currentUserNickname = S.of(context).errorLoading;
         isLoading = false;
       });
     }
@@ -104,8 +107,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             final userData = userDoc.data();
             requests.add({
               'id': userId,
-              'nickname': userData?['nickname'] ?? 'Unknown',
-              'name': userData?['name'] ?? 'Unknown',
+              'nickname': userData?['nickname'] ?? S.of(context).unknown,
+              'name': userData?['name'] ?? S.of(context).unknown,
             });
           }
         }
@@ -116,7 +119,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       print("Error fetching requests: $e");
     }
   }
-
 
   Future<void> _editTrip() async {
     final result = await showDialog<Map<String, dynamic>>(
@@ -148,8 +150,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Trip updated successfully'),
+              SnackBar(
+                content: Text(S.of(context).tripUpdatedSuccessfully),
                 backgroundColor: Color(0xFF8B6857),
               ),
             );
@@ -163,8 +165,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error updating trip'),
+            SnackBar(
+              content: Text(S.of(context).errorUpdatingTrip),
               backgroundColor: Colors.red,
             ),
           );
@@ -176,8 +178,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   Future<void> _deleteTrip() async {
     final bool? confirm = await CustomDialogAlert.showConfirmationDialog(
       context,
-      'Delete Trip',
-      'Are you sure you want to delete this trip? This action cannot be undone.',
+      S.of(context).deleteTrip,
+      S.of(context).areYouSureYouWantToDeleteThisTripThis,
     );
 
     if (confirm == true) {
@@ -201,8 +203,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Trip deleted successfully'),
+              SnackBar(
+                content: Text(S.of(context).tripDeletedSuccessfully),
                 backgroundColor: Color(0xFF8B6857),
               ),
             );
@@ -217,8 +219,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error deleting trip'),
+            SnackBar(
+              content: Text(S.of(context).errorDeletingTrip),
               backgroundColor: Colors.red,
             ),
           );
@@ -301,15 +303,15 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InfoLabel(
-                              label: 'Country',
+                              label: S.of(context).country,
                               value: widget.country,
                             ),
                             const SizedBox(height: 16),
                             InfoLabel(
-                              label: 'Created by',
+                              label: S.of(context).createdBy,
                               value: isLoading
-                                  ? 'Loading...'
-                                  : creatorNickname ?? 'Unknown',
+                                  ? S.of(context).loading
+                                  : creatorNickname ?? S.of(context).unknown,
                             ),
                           ],
                         ),
@@ -319,13 +321,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InfoLabel(
-                              label: 'Date',
+                              label: S.of(context).date,
                               value:
                                   "${widget.formattedStartDate}/${widget.formattedEndDate}",
                             ),
                             const SizedBox(height: 10),
                             InfoLabel(
-                              label: 'Member limit',
+                              label: S.of(context).memberLimit,
                               value: "${widget.memberLimit}",
                             ),
                           ],
@@ -334,8 +336,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    "About",
+                  Text(
+                    S.of(context).about,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -360,8 +362,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   ),
                   const SizedBox(height: 25),
                   if (isCreator && requests.isNotEmpty) ...[
-                    const Text(
-                      "Requests",
+                    Text(
+                      S.of(context).requests,
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -379,14 +381,16 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           color: const Color.fromARGB(255, 250, 227, 223),
                           elevation: 3,
                           child: ListTile(
-                            title: Text(request['name']!,
+                            title: Text(
+                              request['name']!,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF8B6857),
                               ),
                             ),
-                            subtitle: Text("Nickname: ${request['nickname']}",
+                            subtitle: Text(
+                              S.of(context).nicknameRequestnickname,
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -397,31 +401,35 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.check, color: Colors.green),
+                                  icon: const Icon(Icons.check,
+                                      color: Colors.green),
                                   onPressed: () async {
                                     await _handleRequest(request['id']!, true);
                                     setState(() {
-                                      requests.removeAt(index); // Видаляємо запит із списку
+                                      requests.removeAt(
+                                          index); // Видаляємо запит із списку
                                     });
                                   },
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.close, color: Colors.red),
+                                  icon: const Icon(Icons.close,
+                                      color: Colors.red),
                                   onPressed: () async {
                                     await _handleRequest(request['id']!, false);
                                     setState(() {
-                                      requests.removeAt(index); // Видаляємо запит із списку
+                                      requests.removeAt(
+                                          index); // Видаляємо запит із списку
                                     });
                                   },
                                 ),
                               ],
                             ),
-                            onTap: (){
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      SubscriberProfileScreen(uid: request['id']!),
+                                  builder: (context) => SubscriberProfileScreen(
+                                      uid: request['id']!),
                                 ),
                               );
                             },
@@ -450,8 +458,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                               onPressed: () {
                                 _editTrip();
                               },
-                              child: const Text(
-                                "Edit trip",
+                              child: Text(
+                                S.of(context).editTrip,
                                 style: TextStyle(
                                     fontSize: 18, color: Colors.white),
                               ),
@@ -473,8 +481,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                               onPressed: () {
                                 _deleteTrip();
                               },
-                              child: const Text(
-                                "Delete this trip",
+                              child: Text(
+                                S.of(context).deleteThisTrip,
                                 style: TextStyle(
                                     fontSize: 18, color: Colors.white),
                               ),
@@ -498,11 +506,12 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                             ),
                           ),
                           onPressed: () {
-                            final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                            final currentUserId =
+                                FirebaseAuth.instance.currentUser?.uid;
                             addUserToTripRequests(tripId!, currentUserId!);
                           },
-                          child: const Text(
-                            "Travel Request",
+                          child: Text(
+                            S.of(context).travelRequest,
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                         ),
@@ -531,8 +540,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         final tripData = tripDoc.data();
         List<dynamic> currentMembers = tripData['participants'] ?? [];
         final int memberLimit = tripData['memberLimit'];
-        if(currentMembers.length >= memberLimit){
-          CustomAlert.show(context: context, title: "Much members", content: "This trip can not have more than ${memberLimit} members");
+        if (currentMembers.length >= memberLimit) {
+          CustomAlert.show(
+              context: context,
+              title: S.of(context).muchMembers,
+              content: S
+                  .of(context)
+                  .thisTripCanNotHaveMoreThanMemberlimitMembers(memberLimit));
           return;
         }
         if (isAccepted) {
@@ -556,16 +570,17 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                isAccepted ? 'User accepted to the trip' : 'User request declined'),
+            content: Text(isAccepted
+                ? S.of(context).userAcceptedToTheTrip
+                : S.of(context).userRequestDeclined),
             backgroundColor: Colors.brown[300],
           ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error processing request'),
+        SnackBar(
+          content: Text(S.of(context).errorProcessingRequest),
           backgroundColor: Colors.red,
         ),
       );

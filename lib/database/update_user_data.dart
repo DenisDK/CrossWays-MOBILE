@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,10 @@ Future<void> updateProfileNameUsername(
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile updated successfully")));
+        SnackBar(content: Text(S.of(context).profileUpdatedSuccessfully)));
   } catch (e) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Error updating profile")));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context).errorUpdatingProfile)));
     log(e as String);
   }
 }
@@ -45,10 +46,10 @@ Future<void> updateProfileAbout(BuildContext context, String? about) async {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile updated successfully")));
+        SnackBar(content: Text(S.of(context).profileUpdatedSuccessfully)));
   } catch (e) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Error updating profile")));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context).errorUpdatingProfile)));
     log(e as String);
   }
 }
@@ -59,7 +60,7 @@ Future<void> uploadAvatar(BuildContext context) async {
 
   if (pickedFile == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Файл не вибрано')),
+      SnackBar(content: Text(S.of(context).noFileSelected)),
     );
     return;
   }
@@ -67,7 +68,7 @@ Future<void> uploadAvatar(BuildContext context) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Користувач не авторизований')),
+      SnackBar(content: Text(S.of(context).userIsNotAuthorized)),
     );
     return;
   }
@@ -82,8 +83,7 @@ Future<void> uploadAvatar(BuildContext context) async {
   final fileSize = await file.length();
   if (fileSize > 4 * 1024 * 1024) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Розмір файлу не повинен перевищувати 4 МБ')),
+      SnackBar(content: Text(S.of(context).fileSizeMustNotExceed4Mb)),
     );
     return;
   }
@@ -97,9 +97,9 @@ Future<void> uploadAvatar(BuildContext context) async {
       avatarPath = 'profileImages/${user.uid}.jpg';
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
             content: Text(
-                'Анімовані аватарки доступні лише для Premium користувачів')),
+                S.of(context).animatedAvatarsAreOnlyAvailableToPremiumUsers)),
       );
       return;
     }
@@ -122,11 +122,11 @@ Future<void> uploadAvatar(BuildContext context) async {
     await userRef.update({'profileImage': downloadUrl});
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Аватарка успішно оновлена!')),
+      SnackBar(content: Text(S.of(context).avatarSuccessfullyUpdated)),
     );
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Помилка завантаження аватара: $e')),
+      SnackBar(content: Text(S.of(context).avatarUploadErrorE)),
     );
   }
 }

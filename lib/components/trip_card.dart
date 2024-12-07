@@ -1,3 +1,4 @@
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class TripCard extends StatelessWidget {
@@ -75,21 +76,21 @@ class TripCard extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    'Start: $startDate',
+                    S.of(context).startStartdate,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    'End: $endDate',
+                    S.of(context).endEnddate,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    'People: $numberOfPeople',
+                    S.of(context).peopleNumberofpeople,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[700],

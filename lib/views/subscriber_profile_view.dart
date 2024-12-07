@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:cross_ways/views/trip_details_view.dart';
 import '../components/animation_route.dart';
+import '../generated/l10n.dart';
 
 class SubscriberProfileScreen extends StatefulWidget {
   final String uid;
@@ -87,8 +88,8 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
             }
             final userData = snapshot.data!;
             final nickname = userData['nickname'] ?? '@nameForSearch';
-            final name = userData['name'] ?? 'Name';
-            final gender = userData['gender'] ?? 'Gender';
+            final name = userData['name'] ?? S.of(context).name;
+            final gender = userData['gender'] ?? S.of(context).gender;
             final profileImageUrl = userData['profileImage'];
             final aboutMe = userData['aboutMe'] ?? '';
 
@@ -199,8 +200,8 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                         ),
                         const SizedBox(height: 30),
                         if (!isPrivateUser) ...[
-                          const Text(
-                            'About me',
+                          Text(
+                            S.of(context).aboutMe,
                             style: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                               fontSize: 20,
@@ -233,8 +234,8 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const Text(
-                            'My Trips',
+                          Text(
+                            S.of(context).myTrips,
                             style: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                               fontSize: 20,
@@ -250,13 +251,14 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                 return const Center(
                                     child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
-                                return const Center(
-                                    child: Text('Error fetching trips'));
+                                return Center(
+                                    child:
+                                        Text(S.of(context).errorFetchingTrips));
                               } else if (!snapshot.hasData ||
                                   snapshot.data!.isEmpty) {
-                                return const Center(
+                                return Center(
                                     child: Text(
-                                  'No trips found',
+                                  S.of(context).noTripsFound,
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.brown,
@@ -270,14 +272,14 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                   itemCount: trips.length,
                                   itemBuilder: (context, index) {
                                     final trip = trips[index];
-                                    final tripName =
-                                        trip['title'] ?? 'Unnamed trip';
-                                    final tripCountry =
-                                        trip['country'] ?? 'Unnamed country';
-                                    final tripCreator =
-                                        trip['creatorId'] ?? 'Unnamed creator';
+                                    final tripName = trip['title'] ??
+                                        S.of(context).unnamedTrip;
+                                    final tripCountry = trip['country'] ??
+                                        S.of(context).unnamedCountry;
+                                    final tripCreator = trip['creatorId'] ??
+                                        S.of(context).unnamedCreator;
                                     final tripMembers = trip['memberLimit'] ??
-                                        'Unnamed members';
+                                        S.of(context).unnamedMembers;
                                     final tripDescription =
                                         trip['description'] ?? '';
                                     final tripImageUrl = trip['imageUrl'];
@@ -305,8 +307,10 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                         formattedEndDate = toDate;
                                       }
                                     } catch (e) {
-                                      formattedStartDate = 'Date not available';
-                                      formattedEndDate = 'Date not available';
+                                      formattedStartDate =
+                                          S.of(context).dateNotAvailable;
+                                      formattedEndDate =
+                                          S.of(context).dateNotAvailable;
                                     }
 
                                     return Card(
@@ -391,11 +395,11 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                             },
                           ),
                         ] else ...[
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.only(top: 100),
                             child: Center(
                               child: Text(
-                                'This profile is Private',
+                                S.of(context).thisProfileIsPrivate,
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 135, 100, 71),
                                   fontSize: 30,

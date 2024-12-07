@@ -1,6 +1,7 @@
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:cross_ways/views/user_subscriptions_list_view.dart';
 import 'package:cross_ways/views/user_profile_view.dart';
@@ -35,16 +36,18 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 ListTile(
-                  title: const Text('My profile',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).myProfile,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('Main menu',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).mainMenu,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -53,32 +56,36 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Subscriptions',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).subscriptions,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('VIP',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).vip,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
-                  title: const Text('Settings',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).settings,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('About us',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).aboutUs,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -88,8 +95,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                 ),
                 const SizedBox(height: 25),
                 ListTile(
-                  title: const Text('Sign Out',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
+                  title: Text(S.of(context).signOut,
+                      style: const TextStyle(color: Colors.red, fontSize: 18)),
                   onTap: () {
                     _handleSignOut(context);
                   },
@@ -164,14 +171,16 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          const Positioned(
+                          Positioned(
                             left: 25,
                             right: 0,
                             top: 150,
                             child: Column(
                               children: [
                                 Text(
-                                  'Find your travel               soulmate fast & easily',
+                                  S
+                                      .of(context)
+                                      .findYourTravelSoulmateFastEasily,
                                   style: TextStyle(
                                     color: Colors.white70,
                                     fontSize: 30,
@@ -189,7 +198,9 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                 ),
                                 Padding(padding: EdgeInsets.only(top: 20)),
                                 Text(
-                                  'Cross ways and explore the world together',
+                                  S
+                                      .of(context)
+                                      .crossWaysAndExploreTheWorldTogether,
                                   style: TextStyle(
                                     color: Colors.white70,
                                     fontSize: 20,
@@ -239,7 +250,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             ),
                           ),
                           // Друга картка (About us)
-                          const Positioned(
+                          Positioned(
                             left: 25,
                             top: 150,
                             child: SizedBox(
@@ -248,7 +259,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'About us',
+                                    S.of(context).aboutUs,
                                     style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: 45,
@@ -260,10 +271,18 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                       height:
                                           20), // Заміна Padding для відступу між текстами
                                   Text(
-                                    '"CrossWays" is an international platform created to help people struggling '
-                                    'with finding company for their trips or feeling desire to improve its planning. '
-                                    'Developed by the group of particularly stubborn students, "CrossWays" has to offer '
-                                    'you a lot of useful tools for satisfying work and travel planning. Keep reading to know more.',
+                                    S
+                                            .of(context)
+                                            .crosswaysIsAnInternationalPlatformCreatedToHelpPeopleStruggling +
+                                        S
+                                            .of(context)
+                                            .withFindingCompanyForTheirTripsOrFeelingDesireTo +
+                                        S
+                                            .of(context)
+                                            .developedByTheGroupOfParticularlyStubbornStudentsCrosswaysHas +
+                                        S
+                                            .of(context)
+                                            .youALotOfUsefulToolsForSatisfyingWorkAnd,
                                     style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: 20,
@@ -289,8 +308,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Top opportunities for you',
+                          Text(
+                            S.of(context).topOpportunitiesForYou,
                             style: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                               fontSize: 30,
@@ -308,25 +327,29 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             children: [
                               _buildOpportunityItem(
                                 icon: Icons.favorite,
-                                title: 'Finding friends',
-                                description: 'Meet people to travel together!',
+                                title: S.of(context).findingFriends,
+                                description:
+                                    S.of(context).meetPeopleToTravelTogether,
                               ),
                               _buildOpportunityItem(
                                 icon: Icons.compare_arrows,
-                                title: 'Travel matching',
-                                description:
-                                    'Filter travels and people by our special tool!',
+                                title: S.of(context).travelMatching,
+                                description: S
+                                    .of(context)
+                                    .filterTravelsAndPeopleByOurSpecialTool,
                               ),
                               _buildOpportunityItem(
                                 icon: Icons.explore,
-                                title: 'Trip planning',
-                                description:
-                                    'We will help you with the "boring" stuff!',
+                                title: S.of(context).tripPlanning,
+                                description: S
+                                    .of(context)
+                                    .weWillHelpYouWithTheBoringStuff,
                               ),
                               _buildOpportunityItem(
                                 icon: Icons.help,
-                                title: 'Free travel advice',
-                                description: 'We will always help you out!',
+                                title: S.of(context).freeTravelAdvice,
+                                description:
+                                    S.of(context).weWillAlwaysHelpYouOut,
                               ),
                             ],
                           ),
@@ -381,8 +404,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
   void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,
-      'Вихід з аккаунту',
-      'Ви впевнені, що хочете вийти з аккаунту?',
+      S.of(context).logOutOfAccount,
+      S.of(context).areYouSureYouWantToLogOut,
     );
     if (result != null && result) {
       bool isUserSignOut = await signOut();

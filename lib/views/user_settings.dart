@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_ways/database/update_user_data.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/user_subscriptions_list_view.dart';
 import 'package:cross_ways/views/vip_purchase_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,16 +85,18 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 ListTile(
-                  title: const Text('My profile',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).myProfile,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('Main menu',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).mainMenu,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -102,32 +105,36 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Subscriptions',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).subscriptions,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('VIP',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).vip,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: (VipPurchaseScreen())));
+                    Navigator.push(context,
+                        PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
-                  title: const Text('Settings',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).settings,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('About us',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).aboutUs,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -137,8 +144,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 ),
                 const SizedBox(height: 25),
                 ListTile(
-                  title: const Text('Sign Out',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
+                  title: Text(S.of(context).signOut,
+                      style: const TextStyle(color: Colors.red, fontSize: 18)),
                   onTap: () {
                     _handleSignOut(context);
                   },
@@ -193,8 +200,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'User Profile',
+                    Text(
+                      S.of(context).userProfile,
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
@@ -202,8 +209,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Manage data about yourself',
+                    Text(
+                      S.of(context).manageDataAboutYourself,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.brown,
@@ -237,7 +244,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                       return CircleAvatar(
                                         radius: 77,
                                         backgroundImage:
-                                        NetworkImage(snapshot.data!),
+                                            NetworkImage(snapshot.data!),
                                       );
                                     } else {
                                       return const CircleAvatar(
@@ -256,8 +263,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                       FadePageRoute(page: UserSettingsScreen()),
                                     );
                                   },
-                                  child: const Text(
-                                    'Upload new',
+                                  child: Text(
+                                    S.of(context).uploadNew,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.brown,
@@ -272,44 +279,45 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                       ),
                     ),
                     isPremiumUser
-                      ? Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        color: Colors.brown[100],
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Make profile private',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown,
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 16),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              color: Colors.brown[100],
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      S.of(context).makeProfilePrivate,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown,
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: isPrivateUser,
+                                      inactiveTrackColor: Colors.brown[100],
+                                      inactiveThumbColor: Colors.brown,
+                                      activeColor: const Color(0xFF5C6D67),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isPrivateUser = value;
+                                          updateUserPrivateStatus();
+                                        });
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Switch(
-                                value: isPrivateUser,
-                                inactiveTrackColor: Colors.brown[100],
-                                inactiveThumbColor: Colors.brown,
-                                activeColor: const Color(0xFF5C6D67),
-                                onChanged: (value) {
-                                  setState(() {
-                                    isPrivateUser = value;
-                                    updateUserPrivateStatus();
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                    : SizedBox(),
+                            ),
+                          )
+                        : SizedBox(),
                     const SizedBox(height: 16),
                     Card(
                       shape: RoundedRectangleBorder(
@@ -321,8 +329,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'General information',
+                            Text(
+                              S.of(context).generalInformation,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -332,11 +340,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                             const SizedBox(height: 8),
                             Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: TextField(
                                 controller: nameController,
                                 decoration: InputDecoration(
-                                  labelText: 'Name',
+                                  labelText: S.of(context).name,
                                   labelStyle: const TextStyle(
                                     color: Color.fromARGB(255, 135, 100, 71),
                                   ),
@@ -353,11 +361,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                             ),
                             Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: TextField(
                                 controller: usernameController,
                                 decoration: InputDecoration(
-                                  labelText: 'Username',
+                                  labelText: S.of(context).username,
                                   labelStyle: const TextStyle(
                                     color: Color.fromARGB(255, 135, 100, 71),
                                   ),
@@ -380,13 +388,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     String? name =
-                                    nameController.text.isNotEmpty
-                                        ? nameController.text
-                                        : null;
+                                        nameController.text.isNotEmpty
+                                            ? nameController.text
+                                            : null;
                                     String? username =
-                                    usernameController.text.isNotEmpty
-                                        ? usernameController.text
-                                        : null;
+                                        usernameController.text.isNotEmpty
+                                            ? usernameController.text
+                                            : null;
 
                                     if (!isNullOrWhiteSpace(name) ||
                                         !isNullOrWhiteSpace(username)) {
@@ -400,9 +408,10 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Заповніть хоча б одне поле для оновлення')),
+                                        SnackBar(
+                                            content: Text(S
+                                                .of(context)
+                                                .pleaseFillInAtLeastOneFieldToUpdate)),
                                       );
                                     }
                                   },
@@ -412,8 +421,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  child: const Text(
-                                    'Update',
+                                  child: Text(
+                                    S.of(context).update,
                                     style: TextStyle(color: Color(0xFFFFFFFF)),
                                   ),
                                 ),
@@ -434,8 +443,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Additional data',
+                            Text(
+                              S.of(context).additionalData,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -445,16 +454,16 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                             const SizedBox(height: 8),
                             Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: TextField(
                                 controller: aboutController,
                                 maxLines: 3,
                                 style: const TextStyle(
                                   fontSize:
-                                  16, // Встановіть бажаний розмір шрифту
+                                      16, // Встановіть бажаний розмір шрифту
                                 ),
                                 decoration: InputDecoration(
-                                  labelText: 'About yourself',
+                                  labelText: S.of(context).aboutYourself,
                                   labelStyle: const TextStyle(
                                     color: Color.fromARGB(255, 135, 100, 71),
                                   ),
@@ -475,9 +484,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     String? about =
-                                    aboutController.text.isNotEmpty
-                                        ? aboutController.text
-                                        : null;
+                                        aboutController.text.isNotEmpty
+                                            ? aboutController.text
+                                            : null;
                                     if (about != null) {
                                       await updateProfileAbout(context, about);
                                       Navigator.push(
@@ -488,9 +497,10 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Заповніть хоча б одне поле для оновлення')),
+                                        SnackBar(
+                                            content: Text(S
+                                                .of(context)
+                                                .pleaseFillInAtLeastOneFieldToUpdate)),
                                       );
                                     }
                                   },
@@ -500,8 +510,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  child: const Text(
-                                    'Update',
+                                  child: Text(
+                                    S.of(context).update,
                                     style: TextStyle(color: Color(0xFFFFFFFF)),
                                   ),
                                 ),
@@ -521,9 +531,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                             onPressed: () async {
                               final bool? confirm = await CustomDialogAlert
                                   .showConfirmationDialog(
-                                  context,
-                                  'Confirmation of deletion',
-                                  'Are you sure you want to delete your account? This action cannot be undone.');
+                                      context,
+                                      S.of(context).confirmationOfDeletion,
+                                      S
+                                          .of(context)
+                                          .areYouSureYouWantToDeleteYourAccountThis);
                               if (confirm == true) {
                                 deleteUserFromDatabase();
                                 Navigator.pushReplacement(context,
@@ -531,7 +543,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               }
                             },
                             child: Text(
-                              'Delete account',
+                              S.of(context).deleteAccount,
                               style: TextStyle(
                                 color: Colors.red[400],
                                 fontWeight: FontWeight.w500,
@@ -554,8 +566,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
 void _handleSignOut(BuildContext context) async {
   bool? result = await CustomDialogAlert.showConfirmationDialog(
     context,
-    'Вихід з аккаунту',
-    'Ви впевнені, що хочете вийти з аккаунту?',
+    S.of(context).logOutOfAccount,
+    S.of(context).areYouSureYouWantToLogOut,
   );
   if (result != null && result) {
     bool isUserSignOut = await signOut();

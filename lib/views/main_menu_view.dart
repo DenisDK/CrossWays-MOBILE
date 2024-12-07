@@ -2,6 +2,7 @@ import 'dart:math'; // Import the math package for Random
 import 'package:cross_ways/auth/sign_in_with_google.dart';
 import 'package:cross_ways/components/alert_dialog_custom.dart';
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/create_trips_view.dart';
 import 'package:cross_ways/views/join_trips_view.dart';
 import 'package:cross_ways/views/subscriptions_search_view.dart';
@@ -71,16 +72,18 @@ class _MainMenuViewState extends State<MainMenuView> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 ListTile(
-                  title: const Text('My profile',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).myProfile,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserProfileScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('Main menu',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).mainMenu,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -89,32 +92,36 @@ class _MainMenuViewState extends State<MainMenuView> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Subscriptions',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).subscriptions,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(context,
                         PushPageRoute(page: UserSubscriptionsListScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('VIP',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).vip,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
-                    Navigator.push(
-                        context, PushPageRoute(page: (VipPurchaseScreen())));
+                    Navigator.push(context,
+                        PushPageRoute(page: (const VipPurchaseScreen())));
                   },
                 ),
                 ListTile(
-                  title: const Text('Settings',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).settings,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                         context, PushPageRoute(page: UserSettingsScreen()));
                   },
                 ),
                 ListTile(
-                  title: const Text('About us',
-                      style: TextStyle(color: Colors.brown, fontSize: 18)),
+                  title: Text(S.of(context).aboutUs,
+                      style:
+                          const TextStyle(color: Colors.brown, fontSize: 18)),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -124,8 +131,8 @@ class _MainMenuViewState extends State<MainMenuView> {
                 ),
                 const SizedBox(height: 25),
                 ListTile(
-                  title: const Text('Sign Out',
-                      style: TextStyle(color: Colors.red, fontSize: 18)),
+                  title: Text(S.of(context).signOut,
+                      style: const TextStyle(color: Colors.red, fontSize: 18)),
                   onTap: () {
                     _handleSignOut(context);
                   },
@@ -237,9 +244,9 @@ class _MainMenuViewState extends State<MainMenuView> {
                       top: 200,
                       child: Column(
                         children: [
-                          const Text(
-                            'Welcome back!',
-                            style: TextStyle(
+                          Text(
+                            S.of(context).welcomeBack,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 45,
                               fontWeight: FontWeight.bold,
@@ -269,9 +276,9 @@ class _MainMenuViewState extends State<MainMenuView> {
                                 shadowColor:
                                     const Color.fromARGB(255, 92, 109, 103),
                               ),
-                              child: const Text(
-                                'Create a new trip',
-                                style: TextStyle(
+                              child: Text(
+                                S.of(context).createANewTrip,
+                                style: const TextStyle(
                                   color: Color.fromARGB(255, 92, 109, 103),
                                   fontSize: 16,
                                 ),
@@ -294,9 +301,9 @@ class _MainMenuViewState extends State<MainMenuView> {
                                 shadowColor:
                                     const Color.fromARGB(255, 92, 109, 103),
                               ),
-                              child: const Text(
-                                'Join the trip',
-                                style: TextStyle(
+                              child: Text(
+                                S.of(context).joinTheTrip,
+                                style: const TextStyle(
                                   color: Color.fromARGB(255, 92, 109, 103),
                                   fontSize: 15.9,
                                 ),
@@ -319,8 +326,8 @@ class _MainMenuViewState extends State<MainMenuView> {
   void _handleSignOut(BuildContext context) async {
     bool? result = await CustomDialogAlert.showConfirmationDialog(
       context,
-      'Вихід з аккаунту',
-      'Ви впевнені, що хочете вийти з аккаунту?',
+      S.of(context).logOutOfAccount,
+      S.of(context).areYouSureYouWantToLogOut,
     );
     if (result != null && result) {
       bool isUserSignOut = await signOut();

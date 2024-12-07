@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -36,16 +37,14 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
       setState(() {
         // Фільтруємо подорожі, до яких користувач ще не подав запит і не є учасником
         _trips = querySnapshot.docs
-            .map((doc) => {
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>
-        })
+            .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
             .where((trip) {
           final requests = List.from(trip['requests'] ?? []);
           final participants = List.from(trip['participants'] ?? []);
 
           // Якщо користувач ще не подав запит і не є учасником
-          return !requests.contains(currentUserId) && !participants.contains(currentUserId);
+          return !requests.contains(currentUserId) &&
+              !participants.contains(currentUserId);
         }).toList();
       });
     } catch (e) {
@@ -53,9 +52,8 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
     }
   }
 
-
   String formatDate(DateTime? date) {
-    if (date == null) return 'Unknown';
+    if (date == null) return S.of(context).unknown;
     return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
   }
 
@@ -67,12 +65,13 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => TripDetailsScreen(
-          tripName: trip['title'] ?? 'No Title',
-          tripDescription: trip['description'] ?? 'No description available',
+          tripName: trip['title'] ?? S.of(context).noTitle,
+          tripDescription:
+              trip['description'] ?? S.of(context).noDescriptionAvailable,
           tripImageUrl: trip['imageUrl'],
           formattedStartDate: formatDate(fromDate),
           formattedEndDate: formatDate(toDate),
-          country: trip['country'] ?? 'No Location',
+          country: trip['country'] ?? S.of(context).noLocation,
           creator: trip['creatorId'] ?? '',
           memberLimit: trip['memberLimit'] ?? 1,
         ),
@@ -84,9 +83,9 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _trips.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
-                'No trips available',
+                S.of(context).noTripsAvailable,
                 style: TextStyle(fontSize: 18, color: Colors.black54),
               ),
             )
@@ -123,8 +122,8 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
         ),
         child: Column(
           children: [
-            const Text(
-              'Newest trips',
+            Text(
+              S.of(context).newestTrips,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -144,7 +143,7 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              trip['title'] ?? 'No Title',
+              trip['title'] ?? S.of(context).noTitle,
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -153,7 +152,7 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
             ),
             const SizedBox(height: 5),
             Text(
-              trip['country'] ?? 'No Location',
+              trip['country'] ?? S.of(context).noLocation,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black54,
@@ -186,14 +185,17 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
                 ),
                 const SizedBox(width: 20),
                 IconButton(
-                  icon: const Icon(Icons.favorite, color: Colors.pink, size: 40),
+                  icon:
+                      const Icon(Icons.favorite, color: Colors.pink, size: 40),
                   onPressed: () {
                     final currentUserId = _auth.currentUser?.uid;
                     if (currentUserId != null) {
                       final tripId = trip['id'];
                       addUserToTripRequests(tripId, currentUserId);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Request sent successfully!')),
+                        SnackBar(
+                            content:
+                                Text(S.of(context).requestSentSuccessfully)),
                       );
                       setState(() {
                         _trips.removeAt(_controller.page!.toInt());
@@ -209,8 +211,8 @@ class _JoinTripScreenState extends State<JoinTripScreen> {
             const SizedBox(height: 10),
             GestureDetector(
               onTap: () => _navigateToTripDetails(trip),
-              child: const Text(
-                'See more about trip',
+              child: Text(
+                S.of(context).seeMoreAboutTrip,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.pink,

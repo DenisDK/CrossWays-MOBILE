@@ -1,10 +1,10 @@
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'log_in_view.dart';
 import 'package:cross_ways/database/create_database_with_user.dart';
-
 
 class UserRegScreen extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _UserRegScreenState extends State<UserRegScreen> {
   String? nickname;
   String? name;
 
-TextEditingController _dateController = TextEditingController();
+  TextEditingController _dateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +54,10 @@ TextEditingController _dateController = TextEditingController();
                 ),
                 child: Column(
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 40, bottom: 20),
                       child: Text(
-                        'Sign Up',
+                        S.of(context).signUp,
                         style: TextStyle(
                           color: Color.fromARGB(255, 135, 100, 71),
                           fontSize: 40,
@@ -67,7 +67,8 @@ TextEditingController _dateController = TextEditingController();
                     ),
                     // Поле NickName
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -84,12 +85,13 @@ TextEditingController _dateController = TextEditingController();
                           onChanged: (value) {
                             nickname = value; // Зберігаємо введене значення
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'NickName',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).nickname,
                             labelStyle: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                             ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                           ),
                         ),
@@ -97,7 +99,8 @@ TextEditingController _dateController = TextEditingController();
                     ),
                     // Поле Name
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -114,12 +117,13 @@ TextEditingController _dateController = TextEditingController();
                           onChanged: (value) {
                             name = value; // Зберігаємо введене значення
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Name',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).name,
                             labelStyle: TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                             ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                           ),
                         ),
@@ -127,7 +131,8 @@ TextEditingController _dateController = TextEditingController();
                     ),
                     // Поле Birthday
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
@@ -141,55 +146,63 @@ TextEditingController _dateController = TextEditingController();
                           ],
                         ),
                         child: TextField(
-                          controller: _dateController,
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Pick a date',
-                            labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 135, 100, 71),
+                            controller: _dateController,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: S.of(context).pickADate,
+                              labelStyle: TextStyle(
+                                color: Color.fromARGB(255, 135, 100, 71),
+                              ),
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 20),
+                              suffixIcon: Icon(
+                                Icons.calendar_today,
+                                color: Color.fromARGB(255, 135, 100, 71),
+                              ),
+                              border: InputBorder.none,
                             ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                            suffixIcon: Icon(
-                              Icons.calendar_today,
-                              color: Color.fromARGB(255, 135, 100, 71),
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          onTap: () async {
-                            // Вибір дати
+                            onTap: () async {
+                              // Вибір дати
                               birthday = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime.now(),
-                              builder: (BuildContext context, Widget? child) {
-                                return Theme(
-                                  data: ThemeData.light().copyWith(
-                                    primaryColor: const Color.fromARGB(255, 135, 100, 71),
-                                    hintColor: const Color.fromARGB(255, 135, 100, 71),
-                                    colorScheme: const ColorScheme.light(primary: Color.fromARGB(255, 135, 100, 71)),
-                                    buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-                                  ),
-                                  child: child!,
-                                );
-                              },
-                            );
-                             if (birthday != null) {
-                              _dateController.text = "${birthday!.toLocal()}".split(' ')[0];
-                          };
-                          }
-                        ),
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime.now(),
+                                builder: (BuildContext context, Widget? child) {
+                                  return Theme(
+                                    data: ThemeData.light().copyWith(
+                                      primaryColor: const Color.fromARGB(
+                                          255, 135, 100, 71),
+                                      hintColor: const Color.fromARGB(
+                                          255, 135, 100, 71),
+                                      colorScheme: const ColorScheme.light(
+                                          primary: Color.fromARGB(
+                                              255, 135, 100, 71)),
+                                      buttonTheme: const ButtonThemeData(
+                                          textTheme: ButtonTextTheme.primary),
+                                    ),
+                                    child: child!,
+                                  );
+                                },
+                              );
+                              if (birthday != null) {
+                                _dateController.text =
+                                    "${birthday!.toLocal()}".split(' ')[0];
+                              }
+                              ;
+                            }),
                       ),
                     ),
                     // Вибір Гендеру
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       child: Container(
-                        width: 330, 
+                        width: 330,
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.white, 
-                          borderRadius: BorderRadius.circular(20), 
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.3),
@@ -201,10 +214,10 @@ TextEditingController _dateController = TextEditingController();
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
-                                'Gender',
+                                S.of(context).gender,
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 135, 100, 71),
                                   fontSize: 16,
@@ -214,9 +227,10 @@ TextEditingController _dateController = TextEditingController();
                             Row(
                               children: [
                                 Radio<String>(
-                                  value: 'Male',
+                                  value: S.of(context).male,
                                   groupValue: selectedGender,
-                                  activeColor: const Color.fromARGB(255, 135, 100, 71), 
+                                  activeColor:
+                                      const Color.fromARGB(255, 135, 100, 71),
                                   onChanged: (String? value) {
                                     setState(() {
                                       selectedGender = value;
@@ -224,16 +238,20 @@ TextEditingController _dateController = TextEditingController();
                                   },
                                 ),
                                 Text(
-                                  'Male',
+                                  S.of(context).male,
                                   style: TextStyle(
-                                    color: selectedGender == 'Male' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, 
+                                    color: selectedGender == S.of(context).male
+                                        ? const Color.fromARGB(
+                                            255, 135, 100, 71)
+                                        : Colors.black,
                                   ),
                                 ),
-                                const SizedBox(width: 20), 
+                                const SizedBox(width: 20),
                                 Radio<String>(
-                                  value: 'Female',
+                                  value: S.of(context).female,
                                   groupValue: selectedGender,
-                                  activeColor: const Color.fromARGB(255, 135, 100, 71),
+                                  activeColor:
+                                      const Color.fromARGB(255, 135, 100, 71),
                                   onChanged: (String? value) {
                                     setState(() {
                                       selectedGender = value;
@@ -241,9 +259,13 @@ TextEditingController _dateController = TextEditingController();
                                   },
                                 ),
                                 Text(
-                                  'Female',
+                                  S.of(context).female,
                                   style: TextStyle(
-                                    color: selectedGender == 'Female' ? const Color.fromARGB(255, 135, 100, 71) : Colors.black, 
+                                    color:
+                                        selectedGender == S.of(context).female
+                                            ? const Color.fromARGB(
+                                                255, 135, 100, 71)
+                                            : Colors.black,
                                   ),
                                 ),
                               ],
@@ -263,15 +285,16 @@ TextEditingController _dateController = TextEditingController();
                             validateAndSubmit(context);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 92, 109, 103),
+                            backgroundColor:
+                                const Color.fromARGB(255, 92, 109, 103),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
                             elevation: 5,
                             shadowColor: Colors.black45,
                           ),
-                          child: const Text(
-                            'Continue',
+                          child: Text(
+                            S.of(context).continueButton,
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
@@ -301,32 +324,31 @@ TextEditingController _dateController = TextEditingController();
   }
 
   void validateAndSubmit(BuildContext context) {
-    if (nickname == null || nickname!.isEmpty ||
-        name == null || name!.isEmpty ||
+    if (nickname == null ||
+        nickname!.isEmpty ||
+        name == null ||
+        name!.isEmpty ||
         birthday == null ||
         selectedGender == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all fields'),
+        SnackBar(
+          content: Text(S.of(context).pleaseFillInAllFields),
           backgroundColor: Colors.red,
         ),
       );
-    }
-    else {
-      if(!isEighteenOrOlder(birthday!)){
+    } else {
+      if (!isEighteenOrOlder(birthday!)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Your age is under 18'),
+          SnackBar(
+            content: Text(S.of(context).yourAgeIsUnder18),
             backgroundColor: Colors.red,
           ),
         );
       }
       // Все ок
-      else{
+      else {
         addUser(nickname!, name!, selectedGender!, birthday!);
-        Navigator.pushReplacement(
-            context,
-            PushPageRoute(page: MainMenuView()));
+        Navigator.pushReplacement(context, PushPageRoute(page: MainMenuView()));
       }
     }
   }

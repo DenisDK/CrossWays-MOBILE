@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:cross_ways/views/log_in_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +19,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color.fromARGB(255, 135, 100, 71),
@@ -28,7 +37,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
@@ -47,23 +55,21 @@ class HomePage extends StatelessWidget {
                   .doc(user.uid)
                   .get(),
               builder: (context, userDataSnapshot) {
-               if (userDataSnapshot.connectionState == ConnectionState.done) {
+                if (userDataSnapshot.connectionState == ConnectionState.done) {
                   if (userDataSnapshot.data != null &&
                       userDataSnapshot.data!.exists &&
                       userDataSnapshot.data!['nickname'] != null) {
                     return const MainMenuView();
                   } else {
-                    return  LogInScreen();
+                    return LogInScreen();
                   }
                 }
                 return _loadingScreen();
               },
             );
-            
-          } 
-          else {
-            return  LogInScreen();
-            }
+          } else {
+            return LogInScreen();
+          }
         }
         return _loadingScreen();
       },
@@ -75,8 +81,8 @@ class HomePage extends StatelessWidget {
       backgroundColor: Color.fromARGB(255, 188, 188, 176),
       body: Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-              Color.fromARGB(255, 62, 66, 68)),
+          valueColor:
+              AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 62, 66, 68)),
         ),
       ),
     );

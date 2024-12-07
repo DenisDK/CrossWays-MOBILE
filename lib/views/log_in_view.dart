@@ -1,5 +1,6 @@
 import 'package:cross_ways/auth/sing_in_with_facebook.dart';
 import 'package:cross_ways/components/animation_route.dart';
+import 'package:cross_ways/generated/l10n.dart';
 import 'package:cross_ways/views/main_menu_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +32,11 @@ class _LogInScreenState extends State<LogInScreen> {
                     color: Color.fromARGB(255, 231, 229, 225)),
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 120, right: 85),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 120, right: 85),
                       child: Text(
-                        'Log in',
-                        style: TextStyle(
+                        S.of(context).logIn,
+                        style: const TextStyle(
                             color: Color.fromARGB(255, 135, 100, 71),
                             fontSize: 40,
                             fontWeight: FontWeight.bold),
@@ -46,15 +47,12 @@ class _LogInScreenState extends State<LogInScreen> {
                       onPressed: () async {
                         User? user = await signInWithGoogle();
                         if (user != null) {
-                          if(await checkUserExists(user.uid)){
+                          if (await checkUserExists(user.uid)) {
+                            Navigator.pushReplacement(context,
+                                PushPageRoute(page: const MainMenuView()));
+                          } else {
                             Navigator.pushReplacement(
-                                context,
-                                PushPageRoute(page: MainMenuView()));
-                          }
-                          else{
-                            Navigator.pushReplacement(
-                                context,
-                                PushPageRoute(page: UserRegScreen()));
+                                context, PushPageRoute(page: UserRegScreen()));
                           }
                         }
                       },
@@ -69,9 +67,9 @@ class _LogInScreenState extends State<LogInScreen> {
                               width: 1,
                             )),
                       ),
-                      child: const Text(
-                        'Continue with Google',
-                        style: TextStyle(
+                      child: Text(
+                        S.of(context).continueWithGoogle,
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 135, 100, 71),
                           fontSize: 13,
                         ),
@@ -86,11 +84,11 @@ class _LogInScreenState extends State<LogInScreen> {
                           height: 1,
                           color: const Color.fromARGB(255, 135, 100, 71),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            'or',
-                            style: TextStyle(
+                            S.of(context).or,
+                            style: const TextStyle(
                               color: Color.fromARGB(255, 135, 100, 71),
                               fontSize: 16,
                             ),
@@ -108,15 +106,12 @@ class _LogInScreenState extends State<LogInScreen> {
                       onPressed: () async {
                         User? user = await signInWithFacebook(context);
                         if (user != null) {
-                          if(await checkUserExists(user.uid)){
+                          if (await checkUserExists(user.uid)) {
+                            Navigator.pushReplacement(context,
+                                PushPageRoute(page: const MainMenuView()));
+                          } else {
                             Navigator.pushReplacement(
-                                context,
-                                PushPageRoute(page: MainMenuView()));
-                          }
-                          else{
-                            Navigator.pushReplacement(
-                                context,
-                                PushPageRoute(page: UserRegScreen()));
+                                context, PushPageRoute(page: UserRegScreen()));
                           }
                         }
                       },
@@ -131,45 +126,15 @@ class _LogInScreenState extends State<LogInScreen> {
                               width: 1,
                             )),
                       ),
-                      child: const Text(
-                        'Continue with Facebook',
-                        style: TextStyle(
+                      child: Text(
+                        S.of(context).continueWithFacebook,
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 135, 100, 71),
                           fontSize: 13,
                         ),
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 40,
-            right: 20,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isEnglish = !isEnglish;
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 135, 100, 71),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Text(
-                  isEnglish ? 'EN' : 'UA',
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 135, 100, 71),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
                 ),
               ),
             ),
