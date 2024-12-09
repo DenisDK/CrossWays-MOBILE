@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cross_ways/database/check_user_rating.dart';
 import 'package:cross_ways/database/check_user_premium.dart';
 import 'package:cross_ways/database/check_user_private.dart';
+import 'package:cross_ways/database/check_your_rating_to_user.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:cross_ways/views/trip_details_view.dart';
 import '../components/animation_route.dart';
+import '../database/pick_user_rating.dart';
 import '../generated/l10n.dart';
 
 class SubscriberProfileScreen extends StatefulWidget {
@@ -22,6 +25,9 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
   late Future<List<Map<String, dynamic>>?> _userTripsFuture;
   bool isPremiumUser = false;
   bool isPrivateUser = false;
+  double rating = 0.00;
+  int selectedStars = 0;
+  bool isEvaluated = false;
 
   @override
   void initState() {
@@ -30,6 +36,8 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
     _userTripsFuture = _fetchUserTrips(widget.uid);
     doesHasPremium(widget.uid);
     doesAccountPrivate(widget.uid);
+    checkRating(widget.uid);
+    checkForSeletedStars(widget.uid);
   }
 
   Future<Map<String, dynamic>?> _fetchUserData(String uid) async {
@@ -60,6 +68,23 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
       return trips;
     }
     return null;
+  }
+
+  Future<void> checkForSeletedStars(String userId) async {
+    int howManyStars = await getUserFeedbackForTarget(userId);
+    if(howManyStars > 0){
+      setState(() {
+        selectedStars = howManyStars;
+        isEvaluated = true;
+      });
+    }
+  }
+
+  Future<void> checkRating(String userId) async {
+    double whatRating = await calculateAverageRating(userId);
+    setState(() {
+      rating = whatRating;
+    });
   }
 
   Future<void> doesHasPremium(String userId) async {
@@ -184,16 +209,50 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                 isPrivateUser
                                     ? SizedBox()
                                     : Row(
-                                        children: List.generate(5, (index) {
-                                          return Icon(
-                                            index < 4
-                                                ? Icons.star
-                                                : Icons.star_border,
-                                            color: Colors.lightBlueAccent,
-                                            size: 23,
-                                          );
-                                        }),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Зірочки
+                                    ...List.generate(5, (index) {
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          if (!isEvaluated) {
+                                            setState(() {
+                                              selectedStars = index + 1; // Оновлення кількості зірок
+                                              isEvaluated = true;
+                                              checkRating(widget.uid);// Позначка, що оцінка зроблена
+                                            });
+
+                                            // Виклик функції для додавання відгуку
+                                            try {
+                                              String targetUserId = widget.uid; // Заміни на реальний ID користувача
+                                              await addFeedback(targetUserId, selectedStars);
+                                              print('Відгук успішно додано');
+                                            } catch (e) {
+                                              print('Помилка при додаванні відгуку: $e');
+                                            }
+                                          } else {
+                                            print('Ви вже оцінювали цю людину');
+                                          }
+                                        },
+                                        child: Icon(
+                                          index < selectedStars ? Icons.star : Icons.star_border,
+                                          color: Colors.lightBlueAccent,
+                                          size: 23,
+                                        ),
+                                      );
+                                    }),
+                                    const SizedBox(width: 10), // Проміжок між зірками і текстом
+                                    // Текст рейтингу
+                                    Text(
+                                      '${rating}',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color.fromARGB(255, 135, 100, 71),
                                       ),
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
                           ],

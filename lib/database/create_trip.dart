@@ -47,13 +47,7 @@ Future<void> createTrip(
 
     // Створити новий документ у колекції Trips
     DocumentReference tripRef = await firestore.collection('Trips').add(tripData);
-    final TripCollection = FirebaseFirestore.instance.collection('Trips');
     String tripId = tripRef.id;
-
-    await Future.wait([
-      TripCollection.doc(tripId).collection('FeedbackComment').add({}),
-      TripCollection.doc(tripId).collection('FeedbackStars').add({})
-    ]);
 
     // Додати ID до масиву ActiveTrips документа поточного користувача
     await firestore.collection('Users').doc(currentUser.uid).update({

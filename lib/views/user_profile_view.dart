@@ -11,6 +11,7 @@ import '../auth/sign_in_with_google.dart';
 import '../components/alert_dialog_custom.dart';
 import '../components/animation_route.dart';
 import '../database/check_user_premium.dart';
+import '../database/check_user_rating.dart';
 import 'about_as_view.dart';
 import 'log_in_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   late Future<Map<String, dynamic>?> _userDataFuture;
   late Future<List<Map<String, dynamic>>?> _userTripsFuture;
   bool isPremiumUser = false;
+  double rating = 0.00;
 
   @override
   void initState() {
@@ -31,6 +33,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _userDataFuture = _fetchUserData();
     _userTripsFuture = _fetchUserTrips();
     doesHasPremium();
+    checkRating();
   }
 
   Future<Map<String, dynamic>?> _fetchUserData() async {
@@ -44,6 +47,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
     }
     return null;
+  }
+
+  Future<void> checkRating() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    double whatRating = await calculateAverageRating(currentUser!.uid);
+    setState(() {
+      rating = whatRating;
+    });
   }
 
   Future<void> doesHasPremium() async {
@@ -273,14 +284,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   color: Color.fromARGB(255, 135, 100, 71),
                                 ),
                               ),
-                              Row(
-                                children: List.generate(5, (index) {
-                                  return Icon(
-                                    index < 4 ? Icons.star : Icons.star_border,
-                                    color: Colors.lightBlueAccent,
-                                    size: 23,
-                                  );
-                                }),
+                              Text(
+                                'Rating: ${rating}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color.fromARGB(255, 135, 100, 71),
+                                ),
                               ),
                             ],
                           ),
