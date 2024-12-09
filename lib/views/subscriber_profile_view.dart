@@ -3,10 +3,14 @@ import 'package:cross_ways/database/check_user_rating.dart';
 import 'package:cross_ways/database/check_user_premium.dart';
 import 'package:cross_ways/database/check_user_private.dart';
 import 'package:cross_ways/database/check_your_rating_to_user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:cross_ways/views/trip_details_view.dart';
 import '../components/animation_route.dart';
+import '../database/create_comment.dart';
+import '../database/delete_comment.dart';
 import '../database/pick_user_rating.dart';
 import '../generated/l10n.dart';
 
@@ -28,6 +32,9 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
   double rating = 0.00;
   int selectedStars = 0;
   bool isEvaluated = false;
+  final TextEditingController commentController = TextEditingController();
+  List<Map<String, dynamic>> comments = [];
+
 
   @override
   void initState() {
@@ -38,6 +45,36 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
     doesAccountPrivate(widget.uid);
     checkRating(widget.uid);
     checkForSeletedStars(widget.uid);
+    _fetchComments();
+  }
+
+  // Метод для отримання коментарів
+  Future<void> _fetchComments() async {
+    try {
+      var snapshot = await FirebaseFirestore.instance
+          .collection('Users') // Колекція користувачів
+          .doc(widget.uid) // userId передається
+          .collection('FeedbackComment') // Колекція коментарів
+          .get();
+
+      // Отримуємо список коментарів
+      List<Map<String, dynamic>> fetchedComments = snapshot.docs.map((doc) {
+        return {
+          'documentId': doc.id,
+          'authorId': doc['authorId'] ?? '',
+          'authorName': doc['authorName'] ?? 'Unknown', // Перевірка на відсутність даних
+          'text': doc['text'] ?? '', // Перевірка на відсутність тексту
+        };
+      }).toList();
+
+      // Оновлюємо стан
+      setState(() {
+        comments = fetchedComments;
+        print(fetchedComments);
+      });
+    } catch (e) {
+      print("Error fetching comments: $e");
+    }
   }
 
   Future<Map<String, dynamic>?> _fetchUserData(String uid) async {
@@ -453,6 +490,144 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                               }
                             },
                           ),
+                          // Перевести все знизу, що стосується коментарів
+                          const Padding(
+                            padding: EdgeInsets.only(top: 15.0),
+                            child: Text(
+                              "Comments",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 135, 100, 71),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Поле для написання коментаря
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Row(
+                                  children: [
+                                    // Текстове поле
+                                    Expanded(
+                                      child: TextField(
+                                        controller: commentController, // Контролер для введення тексту
+                                        maxLines: 1,
+                                        decoration: InputDecoration(
+                                          hintText: "Write a comment...",
+                                          hintStyle: TextStyle(
+                                            color: Colors.brown
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.brown[100],
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                              color: Colors.brown.withOpacity(0.5),
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                              color: Colors.brown.withOpacity(1),
+                                            ),
+                                          ),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    // Кнопка для надсилання коментаря
+                                    IconButton(
+                                      onPressed: () {
+                                        // Логіка додавання коментаря
+                                        if (commentController.text.isNotEmpty) {
+                                          addFeedbackComment(widget.uid, commentController.text);
+                                          _fetchComments();
+                                        }
+                                      },
+                                      icon: const Icon(
+                                        Icons.send,
+                                        color: Colors.brown,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              // Список коментарів
+                              Container(
+                                height: comments.isEmpty ? 30 : comments.length * 75,// Висота, якщо немає коментарів
+                                child: comments.isEmpty
+                                    ? Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      'No comments yet',
+                                      style: TextStyle(color: Colors.brown, fontSize: 15, fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                )
+                                    : ListView.builder(
+                                  itemCount: comments.length,
+                                  itemBuilder: (context, index) {
+                                    var comment = comments[index];
+                                    User? currentUser = FirebaseAuth.instance.currentUser;
+                                    bool isCurrentUser = comment['authorId'] == currentUser?.uid; // Перевірка на поточного користувача
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 5.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.brown[100],
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            // Ліва частина: нікнейм та текст коментаря
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    comment['authorName'] ?? 'Unknown', // Виведення нікнейму
+                                                    style: TextStyle(
+                                                      color: Colors.brown,
+                                                      fontSize: 17,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                    comment['text'] ?? '',
+                                                    style: TextStyle(color: Colors.brown, fontSize: 14),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            // Якщо це коментар поточного користувача, додаємо кнопку для видалення
+                                            if (isCurrentUser)
+                                              IconButton(
+                                                icon: Icon(Icons.delete, color: Colors.red),
+                                                onPressed: () async {
+                                                  // Викликаємо метод видалення
+                                                  await deleteComment(widget.uid, comment['documentId']);
+                                                  _fetchComments();
+                                                },
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          )
                         ] else ...[
                           Padding(
                             padding: EdgeInsets.only(top: 100),

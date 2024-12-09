@@ -12,6 +12,7 @@ import '../components/alert_dialog_custom.dart';
 import '../components/animation_route.dart';
 import '../database/check_user_premium.dart';
 import '../database/check_user_rating.dart';
+import '../database/delete_comment.dart';
 import 'about_as_view.dart';
 import 'log_in_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   late Future<List<Map<String, dynamic>>?> _userTripsFuture;
   bool isPremiumUser = false;
   double rating = 0.00;
+  List<Map<String, dynamic>> comments = [];
 
   @override
   void initState() {
@@ -34,6 +36,36 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _userTripsFuture = _fetchUserTrips();
     doesHasPremium();
     checkRating();
+    _fetchComments();
+  }
+
+  Future<void> _fetchComments() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    try {
+      var snapshot = await FirebaseFirestore.instance
+          .collection('Users') // Колекція користувачів
+          .doc(currentUser!.uid) // userId передається
+          .collection('FeedbackComment') // Колекція коментарів
+          .get();
+
+      // Отримуємо список коментарів
+      List<Map<String, dynamic>> fetchedComments = snapshot.docs.map((doc) {
+        return {
+          'documentId': doc.id,
+          'authorId': doc['authorId'] ?? '',
+          'authorName': doc['authorName'] ?? 'Unknown', // Перевірка на відсутність даних
+          'text': doc['text'] ?? '', // Перевірка на відсутність тексту
+        };
+      }).toList();
+
+      // Оновлюємо стан
+      setState(() {
+        comments = fetchedComments;
+        print(fetchedComments);
+      });
+    } catch (e) {
+      print("Error fetching comments: $e");
+    }
   }
 
   Future<Map<String, dynamic>?> _fetchUserData() async {
@@ -284,6 +316,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   color: Color.fromARGB(255, 135, 100, 71),
                                 ),
                               ),
+                              // Слово рейтинг перевести
                               Text(
                                 'Rating: ${rating}',
                                 style: const TextStyle(
@@ -489,6 +522,93 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             );
                           }
                         },
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 15.0),
+                        child: Text(
+                          "Comments",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 135, 100, 71),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          // Список коментарів
+                          Container(
+                            height: comments.isEmpty ? 30 : comments.length * 75,// Висота, якщо немає коментарів
+                            child: comments.isEmpty
+                                ? Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text(
+                                  'No comments yet',
+                                  style: TextStyle(color: Colors.brown, fontSize: 15, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            )
+                                : ListView.builder(
+                              itemCount: comments.length,
+                              itemBuilder: (context, index) {
+                                var comment = comments[index];
+                                User? currentUser = FirebaseAuth.instance.currentUser;
+                                bool isCurrentUser = comment['authorId'] == currentUser?.uid; // Перевірка на поточного користувача
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.brown[100],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Ліва частина: нікнейм та текст коментаря
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                comment['authorName'] ?? 'Unknown', // Виведення нікнейму
+                                                style: TextStyle(
+                                                  color: Colors.brown,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                comment['text'] ?? '',
+                                                style: TextStyle(color: Colors.brown, fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // Якщо це коментар поточного користувача, додаємо кнопку для видалення
+                                        if (isCurrentUser)
+                                          IconButton(
+                                            icon: Icon(Icons.delete, color: Colors.red),
+                                            onPressed: () async {
+                                              // Викликаємо метод видалення
+                                              User? currentUser = FirebaseAuth.instance.currentUser;
+                                              await deleteComment(currentUser!.uid, comment['documentId']);
+                                              _fetchComments();
+                                            },
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        ],
                       )
                     ],
                   ),
