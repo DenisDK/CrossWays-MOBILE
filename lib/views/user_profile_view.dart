@@ -53,7 +53,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         return {
           'documentId': doc.id,
           'authorId': doc['authorId'] ?? '',
-          'authorName': doc['authorName'] ?? 'Unknown', // Перевірка на відсутність даних
+          'authorName':
+              doc['authorName'] ?? 'Unknown', // Перевірка на відсутність даних
           'text': doc['text'] ?? '', // Перевірка на відсутність тексту
         };
       }).toList();
@@ -318,7 +319,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ),
                               // Слово рейтинг перевести
                               Text(
-                                'Rating: ${rating}',
+                                S.of(context).ratingRating(rating),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -523,10 +524,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           }
                         },
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(top: 15.0),
                         child: Text(
-                          "Comments",
+                          S.of(context).comments,
                           style: TextStyle(
                             fontSize: 20,
                             color: Color.fromARGB(255, 135, 100, 71),
@@ -540,73 +541,98 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           const SizedBox(height: 10),
                           // Список коментарів
                           Container(
-                            height: comments.isEmpty ? 30 : comments.length * 75,// Висота, якщо немає коментарів
+                            height: comments.isEmpty
+                                ? 30
+                                : comments.length *
+                                    75, // Висота, якщо немає коментарів
                             child: comments.isEmpty
                                 ? Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text(
-                                  'No comments yet',
-                                  style: TextStyle(color: Colors.brown, fontSize: 15, fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            )
-                                : ListView.builder(
-                              itemCount: comments.length,
-                              itemBuilder: (context, index) {
-                                var comment = comments[index];
-                                User? currentUser = FirebaseAuth.instance.currentUser;
-                                bool isCurrentUser = comment['authorId'] == currentUser?.uid; // Перевірка на поточного користувача
-
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 5.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.brown[100],
-                                      borderRadius: BorderRadius.circular(8),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        S.of(context).noCommentsYet,
+                                        style: TextStyle(
+                                            color: Colors.brown,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600),
+                                      ),
                                     ),
-                                    padding: const EdgeInsets.all(10),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // Ліва частина: нікнейм та текст коментаря
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                  )
+                                : ListView.builder(
+                                    itemCount: comments.length,
+                                    itemBuilder: (context, index) {
+                                      var comment = comments[index];
+                                      User? currentUser =
+                                          FirebaseAuth.instance.currentUser;
+                                      bool isCurrentUser = comment[
+                                              'authorId'] ==
+                                          currentUser
+                                              ?.uid; // Перевірка на поточного користувача
+
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 5.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.brown[100],
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          padding: const EdgeInsets.all(10),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                comment['authorName'] ?? 'Unknown', // Виведення нікнейму
-                                                style: TextStyle(
-                                                  color: Colors.brown,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
+                                              // Ліва частина: нікнейм та текст коментаря
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      comment['authorName'] ??
+                                                          S
+                                                              .of(context)
+                                                              .unknown, // Виведення нікнейму
+                                                      style: TextStyle(
+                                                        color: Colors.brown,
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Text(
+                                                      comment['text'] ?? '',
+                                                      style: TextStyle(
+                                                          color: Colors.brown,
+                                                          fontSize: 14),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                comment['text'] ?? '',
-                                                style: TextStyle(color: Colors.brown, fontSize: 14),
-                                              ),
+                                              // Якщо це коментар поточного користувача, додаємо кнопку для видалення
+                                              if (isCurrentUser)
+                                                IconButton(
+                                                  icon: Icon(Icons.delete,
+                                                      color: Colors.red),
+                                                  onPressed: () async {
+                                                    // Викликаємо метод видалення
+                                                    User? currentUser =
+                                                        FirebaseAuth.instance
+                                                            .currentUser;
+                                                    await deleteComment(
+                                                        currentUser!.uid,
+                                                        comment['documentId']);
+                                                    _fetchComments();
+                                                  },
+                                                ),
                                             ],
                                           ),
                                         ),
-                                        // Якщо це коментар поточного користувача, додаємо кнопку для видалення
-                                        if (isCurrentUser)
-                                          IconButton(
-                                            icon: Icon(Icons.delete, color: Colors.red),
-                                            onPressed: () async {
-                                              // Викликаємо метод видалення
-                                              User? currentUser = FirebaseAuth.instance.currentUser;
-                                              await deleteComment(currentUser!.uid, comment['documentId']);
-                                              _fetchComments();
-                                            },
-                                          ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
                           )
                         ],
                       )

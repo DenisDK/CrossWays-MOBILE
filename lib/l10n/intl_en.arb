@@ -172,5 +172,9 @@
   "fileSizeMustNotExceed4Mb": "File size must not exceed 4 MB.",
   "animatedAvatarsAreOnlyAvailableToPremiumUsers": "Animated avatars are only available to Premium users",
   "avatarSuccessfullyUpdated": "Avatar successfully updated!",
-  "avatarUploadErrorE": "Avatar upload error: $e"
+  "avatarUploadErrorE": "Avatar upload error: $e",
+  "comments": "Comments",
+  "noCommentsYet": "No comments yet",
+  "writeAComment": "Write a comment...",
+  "ratingRating": "Rating: ${rating}"
 }

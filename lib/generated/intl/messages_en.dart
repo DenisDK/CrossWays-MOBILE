@@ -20,7 +20,9 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(memberLimit) =>
+  static String m0(rating) => "Rating: \$${rating}";
+
+  static String m1(memberLimit) =>
       "This trip can not have more than ${memberLimit} members";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -62,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "avatarUploadErrorE":
             MessageLookupByLibrary.simpleMessage("Avatar upload error: \$e"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "comments": MessageLookupByLibrary.simpleMessage("Comments"),
         "confirmationOfDeletion":
             MessageLookupByLibrary.simpleMessage("Confirmation of deletion"),
         "continueButton": MessageLookupByLibrary.simpleMessage("Continue"),
@@ -171,6 +174,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nicknameRequestnickname": MessageLookupByLibrary.simpleMessage(
             "Nickname: \${request[\'nickname\']}"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
+        "noCommentsYet":
+            MessageLookupByLibrary.simpleMessage("No comments yet"),
         "noDescriptionAvailable":
             MessageLookupByLibrary.simpleMessage("No description available"),
         "noFileSelected":
@@ -199,6 +204,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please select dates."),
         "profileUpdatedSuccessfully": MessageLookupByLibrary.simpleMessage(
             "Profile updated successfully"),
+        "ratingRating": m0,
         "regular": MessageLookupByLibrary.simpleMessage("Regular"),
         "requestSentSuccessfully":
             MessageLookupByLibrary.simpleMessage("Request sent successfully!"),
@@ -238,7 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "There are several plans for using CrossWays. Please choose the one that suit for trips easily"),
         "thisProfileIsPrivate":
             MessageLookupByLibrary.simpleMessage("This profile is Private"),
-        "thisTripCanNotHaveMoreThanMemberlimitMembers": m0,
+        "thisTripCanNotHaveMoreThanMemberlimitMembers": m1,
         "title": MessageLookupByLibrary.simpleMessage("Title :"),
         "to": MessageLookupByLibrary.simpleMessage("To"),
         "topOpportunitiesForYou":
@@ -288,6 +294,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "withFindingCompanyForTheirTripsOrFeelingDesireTo":
             MessageLookupByLibrary.simpleMessage(
                 "with finding company for their trips or feeling desire to improve its planning. "),
+        "writeAComment":
+            MessageLookupByLibrary.simpleMessage("Write a comment..."),
         "yes": MessageLookupByLibrary.simpleMessage("Yes"),
         "youALotOfUsefulToolsForSatisfyingWorkAnd":
             MessageLookupByLibrary.simpleMessage(

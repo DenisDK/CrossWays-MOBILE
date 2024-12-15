@@ -35,7 +35,6 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
   final TextEditingController commentController = TextEditingController();
   List<Map<String, dynamic>> comments = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -62,7 +61,8 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
         return {
           'documentId': doc.id,
           'authorId': doc['authorId'] ?? '',
-          'authorName': doc['authorName'] ?? 'Unknown', // Перевірка на відсутність даних
+          'authorName':
+              doc['authorName'] ?? 'Unknown', // Перевірка на відсутність даних
           'text': doc['text'] ?? '', // Перевірка на відсутність тексту
         };
       }).toList();
@@ -109,7 +109,7 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
 
   Future<void> checkForSeletedStars(String userId) async {
     int howManyStars = await getUserFeedbackForTarget(userId);
-    if(howManyStars > 0){
+    if (howManyStars > 0) {
       setState(() {
         selectedStars = howManyStars;
         isEvaluated = true;
@@ -246,50 +246,64 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                 isPrivateUser
                                     ? SizedBox()
                                     : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // Зірочки
-                                    ...List.generate(5, (index) {
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          if (!isEvaluated) {
-                                            setState(() {
-                                              selectedStars = index + 1; // Оновлення кількості зірок
-                                              isEvaluated = true;
-                                              checkRating(widget.uid);// Позначка, що оцінка зроблена
-                                            });
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          // Зірочки
+                                          ...List.generate(5, (index) {
+                                            return GestureDetector(
+                                              onTap: () async {
+                                                if (!isEvaluated) {
+                                                  setState(() {
+                                                    selectedStars = index +
+                                                        1; // Оновлення кількості зірок
+                                                    isEvaluated = true;
+                                                    checkRating(widget
+                                                        .uid); // Позначка, що оцінка зроблена
+                                                  });
 
-                                            // Виклик функції для додавання відгуку
-                                            try {
-                                              String targetUserId = widget.uid; // Заміни на реальний ID користувача
-                                              await addFeedback(targetUserId, selectedStars);
-                                              print('Відгук успішно додано');
-                                            } catch (e) {
-                                              print('Помилка при додаванні відгуку: $e');
-                                            }
-                                          } else {
-                                            print('Ви вже оцінювали цю людину');
-                                          }
-                                        },
-                                        child: Icon(
-                                          index < selectedStars ? Icons.star : Icons.star_border,
-                                          color: Colors.lightBlueAccent,
-                                          size: 23,
-                                        ),
-                                      );
-                                    }),
-                                    const SizedBox(width: 10), // Проміжок між зірками і текстом
-                                    // Текст рейтингу
-                                    Text(
-                                      '${rating}',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 135, 100, 71),
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                                  // Виклик функції для додавання відгуку
+                                                  try {
+                                                    String targetUserId = widget
+                                                        .uid; // Заміни на реальний ID користувача
+                                                    await addFeedback(
+                                                        targetUserId,
+                                                        selectedStars);
+                                                    print(
+                                                        'Відгук успішно додано');
+                                                  } catch (e) {
+                                                    print(
+                                                        'Помилка при додаванні відгуку: $e');
+                                                  }
+                                                } else {
+                                                  print(
+                                                      'Ви вже оцінювали цю людину');
+                                                }
+                                              },
+                                              child: Icon(
+                                                index < selectedStars
+                                                    ? Icons.star
+                                                    : Icons.star_border,
+                                                color: Colors.lightBlueAccent,
+                                                size: 23,
+                                              ),
+                                            );
+                                          }),
+                                          const SizedBox(
+                                              width:
+                                                  10), // Проміжок між зірками і текстом
+                                          // Текст рейтингу
+                                          Text(
+                                            '${rating}',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color.fromARGB(
+                                                  255, 135, 100, 71),
+                                            ),
+                                          ),
+                                        ],
+                                      )
                               ],
                             ),
                           ],
@@ -491,10 +505,10 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                             },
                           ),
                           // Перевести все знизу, що стосується коментарів
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.only(top: 15.0),
                             child: Text(
-                              "Comments",
+                              S.of(context).comments,
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Color.fromARGB(255, 135, 100, 71),
@@ -513,28 +527,34 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                     // Текстове поле
                                     Expanded(
                                       child: TextField(
-                                        controller: commentController, // Контролер для введення тексту
+                                        controller:
+                                            commentController, // Контролер для введення тексту
                                         maxLines: 1,
                                         decoration: InputDecoration(
-                                          hintText: "Write a comment...",
-                                          hintStyle: TextStyle(
-                                            color: Colors.brown
-                                          ),
+                                          hintText: S.of(context).writeAComment,
+                                          hintStyle:
+                                              TextStyle(color: Colors.brown),
                                           filled: true,
                                           fillColor: Colors.brown[100],
                                           enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                             borderSide: BorderSide(
-                                              color: Colors.brown.withOpacity(0.5),
+                                              color:
+                                                  Colors.brown.withOpacity(0.5),
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                             borderSide: BorderSide(
-                                              color: Colors.brown.withOpacity(1),
+                                              color:
+                                                  Colors.brown.withOpacity(1),
                                             ),
                                           ),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 10),
                                         ),
                                       ),
                                     ),
@@ -544,7 +564,8 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                                       onPressed: () {
                                         // Логіка додавання коментаря
                                         if (commentController.text.isNotEmpty) {
-                                          addFeedbackComment(widget.uid, commentController.text);
+                                          addFeedbackComment(widget.uid,
+                                              commentController.text);
                                           _fetchComments();
                                         }
                                       },
@@ -559,72 +580,98 @@ class _SubscriberProfileScreenState extends State<SubscriberProfileScreen> {
                               const SizedBox(height: 10),
                               // Список коментарів
                               Container(
-                                height: comments.isEmpty ? 30 : comments.length * 75,// Висота, якщо немає коментарів
+                                height: comments.isEmpty
+                                    ? 30
+                                    : comments.length *
+                                        75, // Висота, якщо немає коментарів
                                 child: comments.isEmpty
                                     ? Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      'No comments yet',
-                                      style: TextStyle(color: Colors.brown, fontSize: 15, fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                )
-                                    : ListView.builder(
-                                  itemCount: comments.length,
-                                  itemBuilder: (context, index) {
-                                    var comment = comments[index];
-                                    User? currentUser = FirebaseAuth.instance.currentUser;
-                                    bool isCurrentUser = comment['authorId'] == currentUser?.uid; // Перевірка на поточного користувача
-
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 5.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.brown[100],
-                                          borderRadius: BorderRadius.circular(8),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(top: 10),
+                                          child: Text(
+                                            S.of(context).noCommentsYet,
+                                            style: TextStyle(
+                                                color: Colors.brown,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600),
+                                          ),
                                         ),
-                                        padding: const EdgeInsets.all(10),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            // Ліва частина: нікнейм та текст коментаря
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                      )
+                                    : ListView.builder(
+                                        itemCount: comments.length,
+                                        itemBuilder: (context, index) {
+                                          var comment = comments[index];
+                                          User? currentUser =
+                                              FirebaseAuth.instance.currentUser;
+                                          bool isCurrentUser = comment[
+                                                  'authorId'] ==
+                                              currentUser
+                                                  ?.uid; // Перевірка на поточного користувача
+
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 5.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.brown[100],
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              padding: const EdgeInsets.all(10),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    comment['authorName'] ?? 'Unknown', // Виведення нікнейму
-                                                    style: TextStyle(
-                                                      color: Colors.brown,
-                                                      fontSize: 17,
-                                                      fontWeight: FontWeight.bold,
+                                                  // Ліва частина: нікнейм та текст коментаря
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          comment['authorName'] ??
+                                                              S
+                                                                  .of(context)
+                                                                  .unknown, // Виведення нікнейму
+                                                          style: TextStyle(
+                                                            color: Colors.brown,
+                                                            fontSize: 17,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Text(
+                                                          comment['text'] ?? '',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.brown,
+                                                              fontSize: 14),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  SizedBox(height: 5),
-                                                  Text(
-                                                    comment['text'] ?? '',
-                                                    style: TextStyle(color: Colors.brown, fontSize: 14),
-                                                  ),
+                                                  // Якщо це коментар поточного користувача, додаємо кнопку для видалення
+                                                  if (isCurrentUser)
+                                                    IconButton(
+                                                      icon: Icon(Icons.delete,
+                                                          color: Colors.red),
+                                                      onPressed: () async {
+                                                        // Викликаємо метод видалення
+                                                        await deleteComment(
+                                                            widget.uid,
+                                                            comment[
+                                                                'documentId']);
+                                                        _fetchComments();
+                                                      },
+                                                    ),
                                                 ],
                                               ),
                                             ),
-                                            // Якщо це коментар поточного користувача, додаємо кнопку для видалення
-                                            if (isCurrentUser)
-                                              IconButton(
-                                                icon: Icon(Icons.delete, color: Colors.red),
-                                                onPressed: () async {
-                                                  // Викликаємо метод видалення
-                                                  await deleteComment(widget.uid, comment['documentId']);
-                                                  _fetchComments();
-                                                },
-                                              ),
-                                          ],
-                                        ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
                               )
                             ],
                           )

@@ -20,7 +20,9 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'uk';
 
-  static String m0(memberLimit) =>
+  static String m0(rating) => "Рейтинг: ${rating}";
+
+  static String m1(memberLimit) =>
       "Ця подорож не може мати більше \$${memberLimit} учасників";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -58,6 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "avaliablePlans":
             MessageLookupByLibrary.simpleMessage("Доступні плани"),
         "cancel": MessageLookupByLibrary.simpleMessage("Скасувати"),
+        "comments": MessageLookupByLibrary.simpleMessage("Коментарі"),
         "confirmationOfDeletion":
             MessageLookupByLibrary.simpleMessage("Підтвердження видалення"),
         "continueWithFacebook":
@@ -171,6 +174,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nicknameRequestnickname": MessageLookupByLibrary.simpleMessage(
             "Нікнейм: \${request[\'nickname\']}"),
         "no": MessageLookupByLibrary.simpleMessage("Ні"),
+        "noCommentsYet":
+            MessageLookupByLibrary.simpleMessage("Поки що немає кометарів"),
         "noDescriptionAvailable":
             MessageLookupByLibrary.simpleMessage("Опис відсутній"),
         "noFileSelected":
@@ -200,6 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Будь ласка, оберіть дати"),
         "profileUpdatedSuccessfully":
             MessageLookupByLibrary.simpleMessage("Профіль успішно оновлено"),
+        "ratingRating": m0,
         "regular": MessageLookupByLibrary.simpleMessage("Звичайний"),
         "requestSentSuccessfully":
             MessageLookupByLibrary.simpleMessage("Запит успішно надіслано!"),
@@ -238,7 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Є декілька планів використання CrossWays. Будь ласка, оберіть той, який підходить для ваших подорожей"),
         "thisProfileIsPrivate":
             MessageLookupByLibrary.simpleMessage("Цей профіль приватний"),
-        "thisTripCanNotHaveMoreThanMemberlimitMembers": m0,
+        "thisTripCanNotHaveMoreThanMemberlimitMembers": m1,
         "title": MessageLookupByLibrary.simpleMessage("Назва:"),
         "to": MessageLookupByLibrary.simpleMessage("До"),
         "topOpportunitiesForYou":
@@ -293,6 +299,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "withFindingCompanyForTheirTripsOrFeelingDesireTo":
             MessageLookupByLibrary.simpleMessage(
                 "компанію для своїх подорожей або прагнуть покращити їх планування"),
+        "writeAComment":
+            MessageLookupByLibrary.simpleMessage("Написати коментар..."),
         "yes": MessageLookupByLibrary.simpleMessage("Так"),
         "youALotOfUsefulToolsForSatisfyingWorkAnd":
             MessageLookupByLibrary.simpleMessage(

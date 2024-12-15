@@ -1679,6 +1679,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Comments`
+  String get comments {
+    return Intl.message(
+      'Comments',
+      name: 'comments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No comments yet`
+  String get noCommentsYet {
+    return Intl.message(
+      'No comments yet',
+      name: 'noCommentsYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a comment...`
+  String get writeAComment {
+    return Intl.message(
+      'Write a comment...',
+      name: 'writeAComment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rating: ${rating}`
+  String ratingRating(Object rating) {
+    return Intl.message(
+      'Rating: \$$rating',
+      name: 'ratingRating',
+      desc: '',
+      args: [rating],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

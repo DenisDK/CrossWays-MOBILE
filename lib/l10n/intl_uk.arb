@@ -160,5 +160,9 @@
   "noFileSelected": "Файл не обрано",
   "userIsNotAuthorized": "Користувач не авторизований",
   "fileSizeMustNotExceed4Mb": "Розмір файлу не повинен перевищувати 4 МБ",
-  "animatedAvatarsAreOnlyAvailableToPremiumUsers": "Анімовані аватари доступні тільки для преміум-користувачів"
+  "animatedAvatarsAreOnlyAvailableToPremiumUsers": "Анімовані аватари доступні тільки для преміум-користувачів",
+  "comments": "Коментарі",
+  "noCommentsYet": "Поки що немає кометарів",
+  "writeAComment": "Написати коментар...",
+  "ratingRating": "Рейтинг: {rating}"
 }
